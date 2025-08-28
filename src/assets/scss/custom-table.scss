@@ -1,0 +1,26 @@
+.table-container {
+    max-height: 100000px;
+    overflow: auto;
+}
+
+table {
+    width: 100%;
+}
+
+.table-head-bg {
+    background-color: $primary;
+}
+
+.table-head-text {
+    color: #ffff;
+    text-transform: uppercase;
+}
+
+.paginate {
+    display: flex; 
+    justify-content: center; 
+}
+
+.paginate > ngb-pagination {
+    margin-top: 15px;
+}

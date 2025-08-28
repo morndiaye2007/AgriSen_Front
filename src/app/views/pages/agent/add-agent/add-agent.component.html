@@ -1,0 +1,340 @@
+<section *ngIf="!isSearch">
+  <form [formGroup]="form">
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="nomComplet" class="form-label">Nom Complet<small style="color: red;">*</small></label>
+          <input type="text" class="form-control form-control-lg" id="nomComplet" placeholder="Nom Complet"
+            formControlName="nomComplet">
+        </div>
+      </div>
+
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="matricule" class="form-label">Matricule<small style="color: red;">*</small></label>
+          <input type="text" class="form-control form-control-lg" id="matricule" placeholder="Matricule"
+            formControlName="matricule">
+        </div>
+      </div>
+
+
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="motdepasse" class="form-label">Mot de passe<small style="color: red;">*</small></label>
+          <input type="password" class="form-control form-control-lg" id="motdepasse" placeholder="Mot de passe"
+            formControlName="motdepasse">
+        </div>
+      </div>
+
+
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="email" class="form-label">Email<small style="color: red;">*</small></label>
+          <input type="email" class="form-control form-control-lg" id="email" placeholder="Email"
+            formControlName="email">
+        </div>
+      </div>
+
+
+
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="description" class="form-label">Description<small style="color: red;">*</small></label>
+          <textarea type="text" class="form-control form-control-lg" id="description" placeholder="Description"
+            formControlName="description"></textarea>
+        </div>
+      </div>
+
+
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="age" class="form-label">Age<small style="color: red;">*</small></label>
+          <input type="number" class="form-control form-control-lg" id="age" placeholder="Age" formControlName="age">
+        </div>
+      </div>
+
+
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="dateNaissance" class="form-label">Date<small style="color: red;">*</small></label>
+          <input type="date" class="form-control form-control-lg" id="dateNaissance" placeholder="Date de naissance"
+            formControlName="dateNaissance">
+        </div>
+      </div>
+
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="heure" class="form-label">Heure<small style="color: red;">*</small></label>
+          <input type="time" class="form-control form-control-lg" id="heure" placeholder="Heure"
+            formControlName="heure">
+        </div>
+      </div>
+
+      <div class="col-md-6 col-sm-12 mb-3">
+        <label class="form-label">Sexe</label>
+        <div class="d-flex gap-3">
+          <div *ngFor="let option of sexe">
+            <input type="radio" [id]="option.name" [value]="option.name" formControlName="sexe" name="sexe">
+            <label [for]="option.name">{{ option.description }}</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-sm-12 mb-3">
+        <label class="form-label">Preferences</label>
+        <div class="d-flex gap-3">
+          <div *ngFor="let option of preferences; let i = index">
+            <input type="checkbox" [id]="option.name" [value]="option.name" (change)="onCheckboxChange($event)"
+              name="preferences">
+            <label [for]="option.name">{{ option.description }}</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- <div class="col-sm-4">
+        <div class="mb-3">
+          <mat-label>Toppings</mat-label>
+          <mat-select [formControl]="toppings" multiple>
+            @for (topping of toppingList; track topping) {
+            <mat-option [value]="topping">{{topping}}</mat-option>
+            }
+          </mat-select>
+        </div>
+      </div> -->
+
+      <div class="mb-3">
+        <label class="form-label">Pays de résidence</label>
+        <div class="input-group" style="width: 370px;">
+          <input type="text" class="form-control" [value]="form.get('pays')?.value" disabled>
+          <span class="input-group-text" (click)="openChoixPays()" style="cursor: pointer; border-left: none;">
+            <mat-icon color="black">search</mat-icon>
+          </span>
+        </div>
+      </div>
+      
+      <div class="row">
+  <!-- Select Poste -->
+  <div class="col-md-6 mb-3">
+    <label for="poste" class="form-label">Poste</label>
+    <select formControlName="poste" class="form-select" id="poste">
+      <option [ngValue]="null">-- Sélectionner un poste --</option>
+      <option *ngFor="let p of postes" [value]="p.id">{{ p.nomPoste }}</option>
+    </select>
+  </div>
+
+  <!-- Select Formation -->
+  <!-- <div class="col-md-6 mb-3">
+    <label for="formationId" class="form-label">Formation</label>
+    <select formControlName="formationId" class="form-select" id="formationId">
+      <option [ngValue]="null">-- Sélectionner une formation --</option>
+      <option *ngFor="let f of formations" [value]="f.id">{{ f.nomFormation }}</option>
+    </select>
+  </div> -->
+
+  <!-- Select Département -->
+  <div class="col-md-6 mb-3">
+    <label for="departement" class="form-label">Département</label>
+    <select formControlName="departement" class="form-select" id="departement">
+      <option [ngValue]="null">-- Sélectionner un département --</option>
+      <option *ngFor="let d of departements" [value]="d.id">{{ d.nomDepartement }}</option>
+    </select>
+  </div>
+</div>
+   
+  <!-- Select Département -->
+  <div class="col-md-6 mb-3">
+    <label for="departement" class="form-label">Langue</label>
+    <select formControlName="departement" class="form-select" id="departement">
+      <option [ngValue]="null">-- Sélectionner un langue --</option>
+      <option *ngFor="let d of langues" [value]="d.id">{{ d.libelle }}</option>
+    </select>
+  </div>
+</div>
+
+  <div class="col-sm-6 mb-3">
+  <label class="form-label">Compétences</label>
+  <ng-select
+    [items]="competences"
+    bindLabel="name"
+    bindValue="name"
+    [multiple]="true"
+    placeholder="-- Sélectionner des competences --"
+    formControlName="competences">
+  </ng-select>
+</div>
+
+
+<!-- <div class="col-md-6 mb-3">
+  <label for="competences" class="form-label">Compétences</label>
+  <select formControlName="competences" class="form-select" id="competences" multiple>
+    <option *ngFor="let d of competences" [ngValue]="d">{{ d.name }}</option>
+  </select>
+</div> -->
+
+
+
+<div class="col-md-6 mb-3">
+    <label for="contrat" class="form-label">Contrat</label>
+    <select formControlName="contrat" class="form-select" id="contrat">
+      <option [ngValue]="null">-- Sélectionner un contrat --</option>
+      <option *ngFor="let d of contrat">{{ d.name }}</option>
+    </select>
+  </div>
+
+      <div class="col-sm-4">
+        <div class="mb-3">
+          <label for="telephone" class="form-label">Téléphone<small style="color: red;">*</small></label>
+          <input type="text" class="form-control form-control-lg" id="telephone" placeholder="Téléphone"
+            formControlName="telephone">
+        </div>
+      </div>
+
+
+  </form>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+    <button type="button" class="btn btn-primary" (click)="create()">Enregistrer</button>
+  </div>
+</section>
+
+<section *ngIf="isSearch">
+  <form [formGroup]="form">
+    <div class="row">
+
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="nomComplet" class="form-label">Nom complet</label>
+          <input type="text" class="form-control form-control-lg" id="nomComplet" placeholder="Nom complet"
+            formControlName="matricule">
+        </div>
+      </div>
+
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="matricule" class="form-label">Matricule</label>
+          <input type="text" class="form-control form-control-lg" id="matricule" placeholder="Matricule"
+            formControlName="matricule">
+        </div>
+      </div>
+
+
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="motdepasse" class="form-label">Mot de passe</label>
+          <input type="text" class="form-control form-control-lg" id="motdepasse" placeholder="Mot de passe"
+            formControlName="motdepasse">
+        </div>
+      </div>
+
+
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <input type="email" class="form-control form-control-lg" id="email" placeholder="Email"
+            formControlName="email">
+        </div>
+      </div>
+
+
+
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="description" class="form-label">Description</label>
+          <textarea type="text" class="form-control form-control-lg" id="description" placeholder="Description"
+            formControlName="description"></textarea>
+        </div>
+      </div>
+
+
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="age" class="form-label">Age</label>
+          <input type="number" class="form-control form-control-lg" id="age" placeholder="Age" formControlName="age">
+        </div>
+      </div>
+
+
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="dateNaissance" class="form-label">Date </label>
+          <input type="date" class="form-control form-control-lg" id="dateNaissance" placeholder="Date de naissance"
+            formControlName="dateNaissance">
+        </div>
+      </div>
+
+
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="heure" class="form-label">Heure<small style="color: red;">*</small></label>
+          <input type="time" class="form-control form-control-lg" id="heure" placeholder="Heure"
+            formControlName="heure">
+        </div>
+      </div>
+
+      <div class="col-md-6 col-sm-12 mb-3">
+        <label class="form-label">Sexe</label>
+        <div class="d-flex gap-3">
+          <div *ngFor="let option of sexe">
+            <input type="radio" [id]="option.name" [value]="option.name" formControlName="sexe" name="sexe">
+            <label [for]="option.name">{{ option.description }}</label>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="col-md-6 col-sm-12 mb-3">
+        <label class="form-label">Preferences</label>
+        <div class="d-flex gap-3">
+          <div *ngFor="let option of preferences; let i = index">
+            <input type="checkbox" [id]="option.name" [value]="option.name" (change)="onCheckboxChange($event)"
+              name="preferences">
+            <label [for]="option.name">{{ option.description }}</label>
+          </div>
+        </div>
+      </div>
+
+
+
+
+      <div class="mb-3">
+        <label class="form-label">Pays de résidence</label>
+        <div class="input-group" style="width: 370px;">
+          <input type="text" class="form-control" [value]="form.get('pays')?.value" disabled>
+          <span class="input-group-text" (click)="openChoixPays()" style="cursor: pointer; border-left: none;">
+            <mat-icon color="black">search</mat-icon>
+          </span>
+        </div>
+      </div>
+
+
+      <div class="col-sm-4">
+        <div class="mb-3">
+          <label for="telephone" class="form-label">Téléphone</label>
+          <input type="text" class="form-control form-control-lg" id="telephone" placeholder="Téléphone"
+            formControlName="telephone">
+        </div>
+
+      </div>
+    </div>
+  </form>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+    <button type="button" class="btn btn-primary" (click)="doSearch()">Rechercher</button>
+  </div>
+
+</section>
+
+
+
+
+<ng-template choixPays let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Selectionner un Pays</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <app-choix-pays></app-choix-pays>
+  </div>
+</ng-template>

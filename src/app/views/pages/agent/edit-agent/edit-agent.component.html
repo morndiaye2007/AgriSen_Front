@@ -1,0 +1,119 @@
+    <form [formGroup]="form">
+      <div class="row">
+
+        <div class="col-sm-6">
+          <div class="mb-3">
+            <label for="nomComplet" class="form-label">Nom complet</label>
+            <input type="text" class="form-control form-control-lg" id="nomComplet" placeholder="Nom complet" formControlName="matricule">
+          </div>
+        </div>
+
+        <div class="col-sm-6">
+          <div class="mb-3">
+            <label for="matricule" class="form-label">Matricule</label>
+            <input type="text" class="form-control form-control-lg" id="matricule" placeholder="Matricule" formControlName="matricule">
+          </div>
+        </div>
+
+
+        <div class="col-sm-6">
+          <div class="mb-3">
+            <label for="motdepasse" class="form-label">Mot de passe</label>
+            <input type="password" class="form-control form-control-lg" id="motdepasse" placeholder="Mot de passe" formControlName="motdepasse">
+          </div>
+        </div>
+
+
+        <div class="col-sm-6">
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="text" class="form-control form-control-lg" id="email" placeholder="Email" formControlName="email">
+          </div>
+        </div>
+
+
+
+        <div class="col-sm-6">
+          <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea type="text" class="form-control form-control-lg" id="description" placeholder="Description" formControlName="description"></textarea>
+          </div>
+        </div>
+
+
+        <div class="col-sm-6">
+          <div class="mb-3">
+            <label for="age" class="form-label">Age</label>
+            <input type="number" class="form-control form-control-lg" id="age" placeholder="Age" formControlName="age">
+          </div>
+        </div>
+
+
+        <div class="col-sm-6">
+          <div class="mb-3">
+            <label for="dateNaissance" class="form-label">Date</label>
+            <input type="date" class="form-control form-control-lg" id="dateNaissance" placeholder="Date de naissance" formControlName="dateNaissance">
+          </div>
+        </div>
+
+        <div class="col-sm-6">
+          <div class="mb-3">
+            <label for="heure" class="form-label">Heure</label>
+            <input type="time" class="form-control form-control-lg" id="heure" placeholder="Heure" formControlName="heure">
+          </div>
+        </div>
+
+      <div class="col-md-6 col-sm-12 mb-3">
+        <label class="form-label">Sexe</label>
+        <div class="d-flex gap-3">
+          <div *ngFor="let option of sexe">
+            <input 
+              type="radio" 
+              [id]="option.name" 
+              [value]="option.name" 
+              formControlName="sexe"
+              name="sexe">
+            <label [for]="option.name">{{ option.description }}</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-sm-12 mb-3">
+        <label class="form-label">Preferences</label>
+        <div class="d-flex gap-3">
+          <div *ngFor="let option of preferences; let i = index">
+            <input type="checkbox" [id]="option.name" [value]="option.name" (change)="onCheckboxChange($event)"
+              name="preferences">
+            <label [for]="option.name">{{ option.description }}</label>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="mb-3">
+        <label class="form-label">Pays de résidence</label>
+        <div class="input-group" style="width: 370px;">
+          <input type="text" class="form-control" [value]="form.get('pays')?.value" disabled>
+          <span class="input-group-text" (click)="openChoixPays()" style="cursor: pointer; border-left: none;">
+            <mat-icon color="black">search</mat-icon>
+          </span>
+        </div>
+      </div>
+
+        
+       
+        <div class="col-sm-4">
+          <div class="mb-3"> 
+            <label for="telephone" class="form-label">Téléphone</label>
+            <input type="text" class="form-control form-control-lg" id="telephone" placeholder="Téléphone" formControlName="telephone">
+          </div>
+      </div>
+
+    </div>
+      
+  </form>
+
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+      <button type="button" class="btn btn-primary" (click)="update()">Modifier</button>
+    </div>

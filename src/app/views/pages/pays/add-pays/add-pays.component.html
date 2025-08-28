@@ -1,0 +1,54 @@
+<section *ngIf="!isSearch">   
+    <form [formGroup]="form">
+      <div class="row">
+         <div class="col-sm-6">
+          <div class="mb-3">
+            <label for="nomComplet" class="form-label"><small style="color: red;">*</small>Code Pays</label>
+            <input type="text" class="form-control form-control-lg" id="code" placeholder="Code Pays" formControlName="code">
+          </div>
+        </div>
+
+        <div class="col-sm-6">
+          <div class="mb-3">
+            <label for="libelle" class="form-label"><small style="color: red;">*</small>Libelle</label>
+            <input type="text" class="form-control form-control-lg" id="libelle" placeholder="Libelle" formControlName="libelle">
+          </div>
+        </div>
+  
+      </div>
+    </form>
+  
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+      <button type="button" class="btn btn-primary" (click)="save()">Enregistrer</button>
+    </div>
+  </section>
+  
+  <section *ngIf="isSearch">   
+    <form [formGroup]="form">
+      <div class="row">
+
+        <div class="col-sm-6">
+          <div class="mb-3">
+            <label for="nomComplet" class="form-label">Code Pays</label>
+            <input type="text" class="form-control form-control-lg" id="code" placeholder="Code Pays" formControlName="code">
+          </div>
+        </div>
+
+        <div class="col-sm-6">
+          <div class="mb-3">
+            <label for="libelle" class="form-label">Libelle</label>
+            <input type="text" class="form-control form-control-lg" id="libelle" placeholder="Libelle" formControlName="libelle">
+          </div>
+        </div>
+              
+    </div>
+  </form>
+
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+      <button type="button" class="btn btn-primary" (click)="doSearch()">Rechercher</button>
+    </div>
+
+</section>
+  
