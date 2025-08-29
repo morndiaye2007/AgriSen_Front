@@ -85,6 +85,8 @@ competences = [
         postes: new FormControl("",Validators.required),
         langues: new FormControl("",Validators.required),
         departements: new FormControl("",Validators.required),
+          contrat: new FormControl("", Validators.required),     
+       competences: new FormControl([], Validators.required), 
        // formations: new FormControl("",Validators.required),
 
       }
@@ -93,29 +95,43 @@ competences = [
 
   }
 
+
   loadPostes(): void {
-    this.agentService.getAllPoste().subscribe({
+  this.agentService.getAllPoste().subscribe({
+    next: (data) => {
+      this.postes = data; // data est déjà le tableau
+      console.log("Postes => ", this.postes);
+    },
+    error: (err) => {
+      console.error('Erreur lors du chargement des postes', err);
+    }
+  });
+}
 
-      next: (data) => {
-        this.postes = data;
-         console.log("data",data);
-      },
-      error: (err) => {
-        console.error('Erreur lors du chargement des postes', err);
-      }
-    });
-  }
+loadLangues(): void {
+  this.agentService.getAllLangues().subscribe({
+    next: (data) => {
+      this.langues = data;
+      console.log("Langues => ", this.langues);
+    },
+    error: (err) => {
+      console.error('Erreur lors du chargement des langues', err);
+    }
+  });
+}
 
-  loadLangues(): void {
-    this.agentService.getAllLangues().subscribe({
-      next: (data) => {
-        this.postes = data;
-      },
-      error: (err) => {
-        console.error('Erreur lors du chargement des postes', err);
-      }
-    });
-  }
+loadDepartements(): void {
+  this.agentService.getAllDepartement().subscribe({
+    next: (data) => {
+      this.departements = data;
+      console.log("Départements => ", this.departements);
+    },
+    error: (err) => {
+      console.error('Erreur lors du chargement des départements', err);
+    }
+  });
+}
+
 
   // loadFormations(): void {
   //   this.agentService.getAllFormation().subscribe({
@@ -128,16 +144,7 @@ competences = [
   //   });
   // }
 
-  loadDepartements(): void {
-    this.agentService.getAllDepartement().subscribe({
-      next: (data) => {
-        this.departements = data;
-      },
-      error: (err) => {
-        console.error('Erreur lors du chargement des départements', err);
-      }
-    });
-  }
+
   create() {
     let agent = this.form.value;
     agent.pays =undefined

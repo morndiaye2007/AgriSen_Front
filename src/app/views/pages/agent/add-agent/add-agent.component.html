@@ -102,7 +102,8 @@
         </div>
       </div> -->
 
-      <div class="mb-3">
+      
+        <div class="col-sm-6 mb-3">
         <label class="form-label">Pays de résidence</label>
         <div class="input-group" style="width: 370px;">
           <input type="text" class="form-control" [value]="form.get('pays')?.value" disabled>
@@ -110,48 +111,54 @@
             <mat-icon color="black">search</mat-icon>
           </span>
         </div>
+        </div>
+        <div class="col-sm-6 mb-3">
+  <label class="form-label">Langues</label>
+        <ng-select
+          [items]="langues"
+          bindLabel="libelle"
+          bindValue="libelle"
+          [multiple]="true"
+          placeholder="-- Sélectionner des langues --"
+          formControlName="langues">
+        </ng-select>
       </div>
+
+     
       
       <div class="row">
-  <!-- Select Poste -->
-  <div class="col-md-6 mb-3">
-    <label for="poste" class="form-label">Poste</label>
-    <select formControlName="poste" class="form-select" id="poste">
-      <option [ngValue]="null">-- Sélectionner un poste --</option>
-      <option *ngFor="let p of postes" [value]="p.id">{{ p.nomPoste }}</option>
-    </select>
-  </div>
 
-  <!-- Select Formation -->
-  <!-- <div class="col-md-6 mb-3">
-    <label for="formationId" class="form-label">Formation</label>
-    <select formControlName="formationId" class="form-select" id="formationId">
-      <option [ngValue]="null">-- Sélectionner une formation --</option>
-      <option *ngFor="let f of formations" [value]="f.id">{{ f.nomFormation }}</option>
-    </select>
-  </div> -->
 
-  <!-- Select Département -->
-  <div class="col-md-6 mb-3">
-    <label for="departement" class="form-label">Département</label>
-    <select formControlName="departement" class="form-select" id="departement">
-      <option [ngValue]="null">-- Sélectionner un département --</option>
-      <option *ngFor="let d of departements" [value]="d.id">{{ d.nomDepartement }}</option>
-    </select>
-  </div>
+        <!-- Select Département -->
+<!-- <div class="col-md-6 mb-3">
+  <label for="departement" class="form-label">Département</label>
+  <select formControlName="departements" class="form-select" id="departement">
+    <option [ngValue]="null">-- Sélectionner un département --</option>
+    <option *ngFor="let d of departements" [value]="d.id">{{ d.libelle }}</option>
+  </select>
+</div> -->
+
+<!-- <div class="col-md-6 mb-3">
+  <label for="langue" class="form-label">Langue</label>
+  <select formControlName="langues" class="form-select" id="langue">
+    <option [ngValue]="null">-- Sélectionner une langue --</option>
+    <option *ngFor="let l of langues" [value]="l.id">{{ l.libelle }}</option>
+  </select>
+</div> -->
+
+
+</div>
+
+<!-- Select Poste -->
+<div class="col-md-6 mb-3">
+  <label for="poste" class="form-label">Poste</label>
+  <select formControlName="postes" class="form-select" id="poste">
+    <option [ngValue]="null">-- Sélectionner un poste --</option>
+    <option *ngFor="let p of postes" [value]="p.id">{{ p.intitule }}</option>
+  </select>
 </div>
    
-  <!-- Select Département -->
-  <div class="col-md-6 mb-3">
-    <label for="departement" class="form-label">Langue</label>
-    <select formControlName="departement" class="form-select" id="departement">
-      <option [ngValue]="null">-- Sélectionner un langue --</option>
-      <option *ngFor="let d of langues" [value]="d.id">{{ d.libelle }}</option>
-    </select>
-  </div>
-</div>
-
-  <div class="col-sm-6 mb-3">
+<div class="col-sm-6 mb-3">
   <label class="form-label">Compétences</label>
   <ng-select
     [items]="competences"
@@ -161,7 +168,12 @@
     placeholder="-- Sélectionner des competences --"
     formControlName="competences">
   </ng-select>
+</div> 
+
+
 </div>
+
+  
 
 
 <!-- <div class="col-md-6 mb-3">
