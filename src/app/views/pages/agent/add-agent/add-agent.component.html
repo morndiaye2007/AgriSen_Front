@@ -8,7 +8,20 @@
             formControlName="nomComplet">
         </div>
       </div>
-
+<!-- 
+             <div class="row mb-3">
+        <div class="col-sm-4">
+          <label for="dateMin" class="form-label">Date minimum</label>
+          <input type="date" id="dateMin" class="form-control" [(ngModel)]="dateMin">
+        </div>
+        <div class="col-sm-4">
+          <label for="dateMax" class="form-label">Date maximum</label>
+          <input type="date" id="dateMax" class="form-control" [(ngModel)]="dateMax">
+        </div>
+        <div class="col-sm-4 d-flex align-items-end">
+          <button class="btn btn-primary" (click)="searchByDate()">Rechercher</button>
+        </div>
+      </div> -->
       <div class="col-sm-6">
         <div class="mb-3">
           <label for="matricule" class="form-label">Matricule<small style="color: red;">*</small></label>
@@ -53,6 +66,27 @@
         </div>
       </div>
 
+         <!-- Notes -->
+      <div class="col-sm-4 mb-3">
+        <label for="notes" class="form-label">Notes<small style="color: red;">*</small></label>
+        <input type="number" class="form-control form-control-lg" id="notes" placeholder="notes"
+               formControlName="notes">
+      </div>
+
+         <!-- <div class="row mb-3">
+        <div class="col-sm-4">
+          <label for="dateMin" class="form-label">Date minimum</label>
+          <input type="date" id="dateMin" class="form-control" [(ngModel)]="dateMin">
+        </div>
+        <div class="col-sm-4">
+          <label for="dateMax" class="form-label">Date maximum</label>
+          <input type="date" id="dateMax" class="form-control" [(ngModel)]="dateMax">
+        </div>
+        <div class="col-sm-4 d-flex align-items-end">
+          <button class="btn btn-primary" (click)="searchByDate()">Rechercher</button>
+        </div>
+      </div> -->
+
 
       <div class="col-sm-6">
         <div class="mb-3">
@@ -61,6 +95,8 @@
             formControlName="dateNaissance">
         </div>
       </div>
+
+
 
       <div class="col-sm-6">
         <div class="mb-3">
@@ -124,7 +160,11 @@
         </ng-select>
       </div>
 
-     
+      <!-- HTML -->
+            <div class="mb-3">
+              <label for="fileUpload" class="form-label">Choisir un fichier</label>
+              <input type="file" id="fileUpload" (change)="onFileSelected($event)" />
+            </div>
       
       <div class="row">
 
@@ -230,15 +270,18 @@
         </div>
       </div>
 
-
-      <div class="col-sm-6">
-        <div class="mb-3">
-          <label for="motdepasse" class="form-label">Mot de passe</label>
-          <input type="text" class="form-control form-control-lg" id="motdepasse" placeholder="Mot de passe"
-            formControlName="motdepasse">
+        <div class="row mb-3">
+        <div class="col-sm-4">
+          <label for="dateMin" class="form-label">Date minimum</label>
+          <input type="date" id="dateMin" class="form-control" [(ngModel)]="dateMin">
         </div>
+        <div class="col-sm-4">
+          <label for="dateMax" class="form-label">Date maximum</label>
+          <input type="date" id="dateMax" class="form-control" [(ngModel)]="dateMax">
+        </div>
+        
       </div>
-
+      
 
       <div class="col-sm-6">
         <div class="mb-3">
@@ -284,7 +327,7 @@
         </div>
       </div>
 
-      <div class="col-md-6 col-sm-12 mb-3">
+      <!-- <div class="col-md-6 col-sm-12 mb-3">
         <label class="form-label">Sexe</label>
         <div class="d-flex gap-3">
           <div *ngFor="let option of sexe">
@@ -292,7 +335,21 @@
             <label [for]="option.name">{{ option.description }}</label>
           </div>
         </div>
-      </div>
+      </div> -->
+
+      <div class="col-md-6 col-sm-12 mb-3">
+  <label class="form-label">Sexe</label>
+  <div class="d-flex gap-3">
+    <div *ngFor="let option of sexe">
+      <input type="checkbox"
+             [id]="option.name"
+             [value]="option.name"
+             (change)="onSexeChange($event)">
+      <label [for]="option.name">{{ option.description }}</label>
+    </div>
+  </div>
+</div>
+
 
 
       <div class="col-md-6 col-sm-12 mb-3">
@@ -305,20 +362,29 @@
           </div>
         </div>
       </div>
-
-
-
-
-      <div class="mb-3">
-        <label class="form-label">Pays de résidence</label>
-        <div class="input-group" style="width: 370px;">
-          <input type="text" class="form-control" [value]="form.get('pays')?.value" disabled>
-          <span class="input-group-text" (click)="openChoixPays()" style="cursor: pointer; border-left: none;">
-            <mat-icon color="black">search</mat-icon>
-          </span>
         </div>
-      </div>
+              <div class="mb-3">
+          <label class="form-label">Pays de résidence</label>
+          <div class="d-flex gap-3 flex-wrap">
+            <div *ngFor="let pays of listePays">
+              <input type="checkbox"
+                    [id]="pays.code"
+                    [value]="pays.libelle"
+                    (change)="onPaysChange($event)">
+              <label [for]="pays.code">{{ pays.libelle }}</label>
+            </div>
+          </div>
+        </div>
 
+        <ng-template choixPays let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Selectionner un Pays</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <app-choix-pays></app-choix-pays>
+  </div>
+</ng-template>
 
       <div class="col-sm-4">
         <div class="mb-3">
@@ -328,7 +394,6 @@
         </div>
 
       </div>
-    </div>
   </form>
 
   <div class="modal-footer">
@@ -337,16 +402,3 @@
   </div>
 
 </section>
-
-
-
-
-<ng-template choixPays let-modal>
-  <div class="modal-header">
-    <h5 class="modal-title" id="exampleModalLabel">Selectionner un Pays</h5>
-    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
-  </div>
-  <div class="modal-body">
-    <app-choix-pays></app-choix-pays>
-  </div>
-</ng-template>

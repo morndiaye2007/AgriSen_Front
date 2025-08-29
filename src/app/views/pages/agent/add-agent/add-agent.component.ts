@@ -23,11 +23,19 @@ export class AddAgentComponent
   toppings = new FormControl('');
   toppingList: string[] = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
 
+  listePays: any[] = [];
+
+  dateMin!: string; // YYYY-MM-DD
+dateMax!: string;
+agents: any[] = []; // liste des agents
+allAgents: any[] = []; // liste complète pour filtrer côté front
+
+
   postes: any[] = [];
   //formations: any[] = [];
     departements: any[] = [];
   langues: any[] = [];
-
+  selectedFile: File | null = null;
   sexe=[
     {name:'MASCULIN',description:'Masculin'},
     {name:'FEMININ',description:'Feminin'},
@@ -55,10 +63,26 @@ competences = [
 
 
 
-  constructor(private agentService:AgentService,
+  constructor(private agentService:AgentService, private paysService: AgentService,
     private modalService: NgbModal,
     private fb: FormBuilder
-  ) { }
+  ) { 
+     this.form = this.fb.group({
+    sexe: this.fb.array([]), // tableau pour stocker les sexes choisis
+    // ... autres champs
+  });
+
+   this.form = this.fb.group({
+      pays: this.fb.array([]), // tableau pour les pays sélectionnés
+      // ... autres champs
+    });
+
+   this.form = this.fb.group({
+    pays: this.fb.array([]), // tableau pour stocker les pays choisis
+    // ... autres champs
+  });
+
+  }
   ngOnInit(): void {
    this.initForm()
    this.loadDepartements()
@@ -87,7 +111,7 @@ competences = [
         departements: new FormControl("",Validators.required),
           contrat: new FormControl("", Validators.required),     
        competences: new FormControl([], Validators.required), 
-       // formations: new FormControl("",Validators.required),
+       notes: new FormControl("",Validators.required),
 
       }
     );
@@ -95,6 +119,11 @@ competences = [
 
   }
 
+  loadPays() {
+    this.paysService.getAllPays().subscribe((res: any[]) => {
+      this.listePays = res;
+    });
+  }
 
   loadPostes(): void {
   this.agentService.getAllPoste().subscribe({
@@ -171,6 +200,37 @@ loadDepartements(): void {
     this.search.emit(this.form.value)
   }
 
+  // Fonction pour gérer les checkbox
+onSexeChange(event: any) {
+  const sexeArray: FormArray = this.form.get('sexe') as FormArray;
+
+  if (event.target.checked) {
+    sexeArray.push(this.fb.control(event.target.value));
+  } else {
+    const index = sexeArray.controls.findIndex(x => x.value === event.target.value);
+    sexeArray.removeAt(index);
+  }
+}
+
+   searchByDate() {
+    this.agents = this.allAgents.filter(agent => {
+      const agentDate = new Date(agent.dateNaissance); // ou agent.date selon ton modèle
+      const minDate = this.dateMin ? new Date(this.dateMin) : null;
+      const maxDate = this.dateMax ? new Date(this.dateMax) : null;
+  
+      if (minDate && maxDate) {
+        return agentDate >= minDate && agentDate <= maxDate; // compris entre
+      } else if (minDate) {
+        return agentDate >= minDate; // supérieur à
+      } else if (maxDate) {
+        return agentDate <= maxDate; // inférieur à
+      } else {
+        return true; // aucun filtre
+      }
+    });
+  }
+  
+
   emitSubmit(){
     this.submit.emit(true);
   }
@@ -219,7 +279,35 @@ loadDepartements(): void {
     }
   }
 }
+onFileSelected(event: any) {
+  this.selectedFile = event.target.files[0];
+  console.log("Fichier sélectionné :", this.selectedFile);
 }
 
+uploadFile() {
+  if (!this.selectedFile) {
+    console.warn("Aucun fichier sélectionné !");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append('file', this.selectedFile, this.selectedFile.name);
+
+  // Exemple avec ton service agentService (adapte l’URL backend)
+  
+    
+  }
+
+  onPaysChange(event: any) {
+  const paysArray: FormArray = this.form.get('pays') as FormArray;
+
+  if (event.target.checked) {
+    paysArray.push(this.fb.control(event.target.value));
+  } else {
+    const index = paysArray.controls.findIndex(x => x.value === event.target.value);
+    paysArray.removeAt(index);
+  }
 
 
+  }
+}

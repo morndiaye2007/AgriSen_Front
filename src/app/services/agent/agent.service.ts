@@ -31,6 +31,9 @@ export class AgentService {
       if(req?.matricule){
         parametres = parametres.append("matricule", req.matricule);
       }
+      if(req?.notes){
+        parametres = parametres.append("notes", req.notes);
+      }
       if(req?.description){
         parametres = parametres.append("description", req.description);
       }  
@@ -93,5 +96,20 @@ export class AgentService {
     return this.http.get<any>(`${environment.baseUrl}langue/all`)
       .pipe(map(res => res.payload)); // ⚡
   }
+
+  downloadFichier(id: number): Observable<Blob> {
+  return this.http.get(`${environment.baseUrl}/download/${id}`, { responseType: 'blob' });
+}
+ // 🔹 PAYS
+  getAllPays(): Observable<any[]> {
+    return this.http.get<any>(`${environment.baseUrl}pays/all`)
+      .pipe(map(res => res.payload));
+  }
+
+  getPaysById(id: number): Observable<any> {
+    return this.http.get<any>(`${environment.baseUrl}pays/${id}`);
+  }
+
+
 
 }

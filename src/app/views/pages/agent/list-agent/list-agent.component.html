@@ -98,6 +98,12 @@
                        Telephone </th>
                     <td mat-cell *matCellDef="let agent" class="text-center"> {{agent?.telephone}} </td>
                 </ng-container>
+
+                 <ng-container matColumnDef="notes">
+                    <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:50px;">
+                       notes </th>
+                    <td mat-cell *matCellDef="let agent" class="text-center"> {{agent?.notes}} </td>
+                </ng-container>
                      
                 <ng-container matColumnDef="actions" stickyEnd>
                     <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:0px;">

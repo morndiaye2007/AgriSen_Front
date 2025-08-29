@@ -19,6 +19,17 @@ export class EditAgentComponent {
   @Input() agentToUpdate: any;
   @Input() isSearch: any;
   libellePays : string='k';
+
+
+  
+  dateMin!: string; // YYYY-MM-DD
+dateMax!: string;
+agents: any[] = []; // liste des agents
+allAgents: any[] = []; // liste complète pour filtrer côté front
+
+
+    listePays: any[] = [];
+selectedPays: string[] = []; // tableau des pays sélectionnés
   sexe=[
     {name:'MASCULIN',description:'Masculin'},
     {name:'FEMININ',description:'Feminin'},
@@ -58,6 +69,10 @@ export class EditAgentComponent {
         pays: new FormControl({ value: '', disabled: true }),
         paysId: new FormControl(null),
         telephone: new FormControl("",Validators.required),
+        notes: new FormControl("",Validators.required),
+        dateMin: new FormControl("",Validators.required),
+        dateMax: new FormControl("",Validators.required),      
+
       }
     )
     this.loadFileds()
@@ -77,6 +92,8 @@ export class EditAgentComponent {
     this.form.get('description')?.setValue(this.agentToUpdate?.description);
     this.form.get('age')?.setValue(this.agentToUpdate?.age);
     this.form.get('dateNaissance')?.setValue(Helper.editDate(this.agentToUpdate?.dateNaissance));
+    this.form.get('pays')?.setValue(Helper.editDate(this.agentToUpdate?.pays));
+
 
     //  Ajout du champ heure dans le FormGroup avant d'affecter
     if (!this.form.contains('heure')) {
@@ -133,12 +150,30 @@ this.form.get('paysId')?.setValue(this.agentToUpdate.pays?.id);
     this.search.emit(this.form.value)
   }
 
+  searchByDate() {
+    this.agents = this.allAgents.filter(agent => {
+      const agentDate = new Date(agent.dateNaissance); // ou agent.date selon ton modèle
+      const minDate = this.dateMin ? new Date(this.dateMin) : null;
+      const maxDate = this.dateMax ? new Date(this.dateMax) : null;
+  
+      if (minDate && maxDate) {
+        return agentDate >= minDate && agentDate <= maxDate; // compris entre
+      } else if (minDate) {
+        return agentDate >= minDate; // supérieur à
+      } else if (maxDate) {
+        return agentDate <= maxDate; // inférieur à
+      } else {
+        return true; // aucun filtre
+      }
+    });
+  }
+  
+
   emitSubmit() {
     this.submit.emit(true);
   }
 
-    
-
+  
   openChoixPays() {
   const modalRef = this.modalService.open(ChoixPaysComponent, {
     size: 'lg',
@@ -173,5 +208,19 @@ this.form.get('paysId')?.setValue(this.agentToUpdate.pays?.id);
       }
     }
   }
+
+  onPaysChange(event: any) {
+  const value = event.target.value;
+  if(event.target.checked){
+    this.selectedPays.push(value);
+  } else {
+    const index = this.selectedPays.indexOf(value);
+    if(index > -1){
+      this.selectedPays.splice(index, 1);
+    }
+  }
+  // Mise à jour du formulaire si tu utilises reactive form
+  this.form.get('pays')?.setValue(this.selectedPays);
+}
 
 }

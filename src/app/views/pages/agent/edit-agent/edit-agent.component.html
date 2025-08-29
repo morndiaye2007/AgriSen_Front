@@ -8,21 +8,26 @@
           </div>
         </div>
 
+          <div class="row mb-3">
+        <div class="col-sm-4">
+          <label for="dateMin" class="form-label">Date minimum</label>
+          <input type="date" id="dateMin" class="form-control" [(ngModel)]="dateMin">
+        </div>
+        <div class="col-sm-4">
+          <label for="dateMax" class="form-label">Date maximum</label>
+          <input type="date" id="dateMax" class="form-control" [(ngModel)]="dateMax">
+        </div>
+        <div class="col-sm-4 d-flex align-items-end">
+          <button class="btn btn-primary" (click)="searchByDate()">Rechercher</button>
+        </div>
+      </div>
+      
         <div class="col-sm-6">
           <div class="mb-3">
             <label for="matricule" class="form-label">Matricule</label>
             <input type="text" class="form-control form-control-lg" id="matricule" placeholder="Matricule" formControlName="matricule">
           </div>
         </div>
-
-
-        <div class="col-sm-6">
-          <div class="mb-3">
-            <label for="motdepasse" class="form-label">Mot de passe</label>
-            <input type="password" class="form-control form-control-lg" id="motdepasse" placeholder="Mot de passe" formControlName="motdepasse">
-          </div>
-        </div>
-
 
         <div class="col-sm-6">
           <div class="mb-3">
@@ -31,6 +36,12 @@
           </div>
         </div>
 
+             <!-- Notes -->
+      <div class="col-sm-4 mb-3">
+        <label for="notes" class="form-label">Notes<small style="color: red;">*</small></label>
+        <input type="number" class="form-control form-control-lg" id="notes" placeholder="notes"
+               formControlName="notes">
+      </div>
 
 
         <div class="col-sm-6">
@@ -89,18 +100,19 @@
         </div>
       </div>
 
+          <div class="mb-3">
+  <label class="form-label">Pays de résidence</label>
+  <div style="width: 370px;">
+    <mat-form-field class="w-100">
+      <mat-select formControlName="pays" multiple placeholder="Sélectionner un ou plusieurs pays">
+        <mat-option *ngFor="let pays of listePays" [value]="pays">
+          {{ pays }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+</div>
 
-      <div class="mb-3">
-        <label class="form-label">Pays de résidence</label>
-        <div class="input-group" style="width: 370px;">
-          <input type="text" class="form-control" [value]="form.get('pays')?.value" disabled>
-          <span class="input-group-text" (click)="openChoixPays()" style="cursor: pointer; border-left: none;">
-            <mat-icon color="black">search</mat-icon>
-          </span>
-        </div>
-      </div>
-
-        
        
         <div class="col-sm-4">
           <div class="mb-3"> 
