@@ -8,20 +8,7 @@
             formControlName="nomComplet">
         </div>
       </div>
-<!-- 
-             <div class="row mb-3">
-        <div class="col-sm-4">
-          <label for="dateMin" class="form-label">Date minimum</label>
-          <input type="date" id="dateMin" class="form-control" [(ngModel)]="dateMin">
-        </div>
-        <div class="col-sm-4">
-          <label for="dateMax" class="form-label">Date maximum</label>
-          <input type="date" id="dateMax" class="form-control" [(ngModel)]="dateMax">
-        </div>
-        <div class="col-sm-4 d-flex align-items-end">
-          <button class="btn btn-primary" (click)="searchByDate()">Rechercher</button>
-        </div>
-      </div> -->
+
       <div class="col-sm-6">
         <div class="mb-3">
           <label for="matricule" class="form-label">Matricule<small style="color: red;">*</small></label>
@@ -29,7 +16,6 @@
             formControlName="matricule">
         </div>
       </div>
-
 
       <div class="col-sm-6">
         <div class="mb-3">
@@ -39,7 +25,6 @@
         </div>
       </div>
 
-
       <div class="col-sm-6">
         <div class="mb-3">
           <label for="email" class="form-label">Email<small style="color: red;">*</small></label>
@@ -48,16 +33,13 @@
         </div>
       </div>
 
-
-
       <div class="col-sm-6">
         <div class="mb-3">
           <label for="description" class="form-label">Description<small style="color: red;">*</small></label>
-          <textarea type="text" class="form-control form-control-lg" id="description" placeholder="Description"
+          <textarea class="form-control form-control-lg" id="description" placeholder="Description"
             formControlName="description"></textarea>
         </div>
       </div>
-
 
       <div class="col-sm-6">
         <div class="mb-3">
@@ -66,27 +48,11 @@
         </div>
       </div>
 
-         <!-- Notes -->
       <div class="col-sm-4 mb-3">
         <label for="notes" class="form-label">Notes<small style="color: red;">*</small></label>
         <input type="number" class="form-control form-control-lg" id="notes" placeholder="notes"
-               formControlName="notes">
+          formControlName="notes">
       </div>
-
-         <!-- <div class="row mb-3">
-        <div class="col-sm-4">
-          <label for="dateMin" class="form-label">Date minimum</label>
-          <input type="date" id="dateMin" class="form-control" [(ngModel)]="dateMin">
-        </div>
-        <div class="col-sm-4">
-          <label for="dateMax" class="form-label">Date maximum</label>
-          <input type="date" id="dateMax" class="form-control" [(ngModel)]="dateMax">
-        </div>
-        <div class="col-sm-4 d-flex align-items-end">
-          <button class="btn btn-primary" (click)="searchByDate()">Rechercher</button>
-        </div>
-      </div> -->
-
 
       <div class="col-sm-6">
         <div class="mb-3">
@@ -95,8 +61,6 @@
             formControlName="dateNaissance">
         </div>
       </div>
-
-
 
       <div class="col-sm-6">
         <div class="mb-3">
@@ -127,112 +91,87 @@
         </div>
       </div>
 
-      <!-- <div class="col-sm-4">
-        <div class="mb-3">
-          <mat-label>Toppings</mat-label>
-          <mat-select [formControl]="toppings" multiple>
-            @for (topping of toppingList; track topping) {
-            <mat-option [value]="topping">{{topping}}</mat-option>
-            }
-          </mat-select>
-        </div>
-      </div> -->
-
-      
-        <div class="col-sm-6 mb-3">
+      <div class="col-sm-6 mb-3">
         <label class="form-label">Pays de résidence</label>
         <div class="input-group" style="width: 370px;">
           <input type="text" class="form-control" [value]="form.get('pays')?.value" disabled>
-          <span class="input-group-text" (click)="openChoixPays()" style="cursor: pointer; border-left: none;">
+          <span class="input-group-text" (click)="openPaysModal()" style="cursor: pointer; border-left: none;">
             <mat-icon color="black">search</mat-icon>
           </span>
         </div>
-        </div>
-        <div class="col-sm-6 mb-3">
-  <label class="form-label">Langues</label>
-        <ng-select
-          [items]="langues"
-          bindLabel="libelle"
-          bindValue="libelle"
-          [multiple]="true"
-          placeholder="-- Sélectionner des langues --"
-          formControlName="langues">
+      </div>
+
+      <div class="col-sm-6 mb-3">
+        <label class="form-label">Langues</label>
+        <ng-select [items]="langues" bindLabel="libelle" bindValue="libelle" [multiple]="true"
+          placeholder="-- Sélectionner des langues --" formControlName="langues">
         </ng-select>
       </div>
 
-      <!-- HTML -->
-            <div class="mb-3">
-              <label for="fileUpload" class="form-label">Choisir un fichier</label>
-              <input type="file" id="fileUpload" (change)="onFileSelected($event)" />
-            </div>
+      <div class="col-sm-6 mb-3">
+        <label class="form-label">Filière Suivi</label>
+        <div class="input-group" style="width: 370px;">
+          <input type="text" class="form-control" [value]="form.get('filiereSuivi')?.value" disabled>
+          <span class="input-group-text" (click)="openFiliereModal()" style="cursor: pointer; border-left: none;">
+            <mat-icon color="black">search</mat-icon>
+          </span>
+        </div>
+      </div>
+
       
-      <div class="row">
+<div class="form-group">
+        <label for="file">Fichier (PDF, DOC, DOCX ou Image)</label>
+        <input
+          type="file"
+          id="file"
+          class="form-control"
+          (change)="onFileSelected($event)"
+          accept=".pdf,.doc,.docx,image/*">
+        <small class="form-text text-muted">
+          Formats acceptés : PDF, DOC, DOCX, JPG, PNG, GIF
+        </small>
+        <!-- Aperçu pour les images -->
+        <div *ngIf="filePreview && isImage" class="mt-2">
+          <img [src]="filePreview" alt="Aperçu" class="img-thumbnail" style="max-height: 100px;">
+        </div>
+        <!-- Icône pour les fichiers PDF -->
+        <div *ngIf="filePreview && !isImage" class="mt-2">
+          <i class="fas fa-file-pdf fa-3x text-danger" *ngIf="isPdf"></i>
+          <i class="fas fa-file-word fa-3x text-primary" *ngIf="isDoc"></i>
+          <p class="mt-1">{{selectedFileName}}</p>
+        </div>
+      </div> 
 
+      <!-- <div class="mb-3">
+        <label for="fileUpload" class="form-label">Choisir un fichier</label>
+        <input type="file" id="fileUpload" (change)="onFileSelected($event)" />
+      </div> -->
 
-        <!-- Select Département -->
-<!-- <div class="col-md-6 mb-3">
-  <label for="departement" class="form-label">Département</label>
-  <select formControlName="departements" class="form-select" id="departement">
-    <option [ngValue]="null">-- Sélectionner un département --</option>
-    <option *ngFor="let d of departements" [value]="d.id">{{ d.libelle }}</option>
-  </select>
-</div> -->
+      
 
-<!-- <div class="col-md-6 mb-3">
-  <label for="langue" class="form-label">Langue</label>
-  <select formControlName="langues" class="form-select" id="langue">
-    <option [ngValue]="null">-- Sélectionner une langue --</option>
-    <option *ngFor="let l of langues" [value]="l.id">{{ l.libelle }}</option>
-  </select>
-</div> -->
+      <div class="col-md-6 mb-3">
+        <label for="poste" class="form-label">Poste</label>
+        <select formControlName="postes" class="form-select" id="poste">
+          <option [ngValue]="null">-- Sélectionner un poste --</option>
+          <option *ngFor="let p of postes" [value]="p.id">{{ p.intitule }}</option>
+        </select>
+      </div>
 
+      <div class="col-sm-6 mb-3">
+        <label class="form-label">Compétences</label>
+        <ng-select [items]="competences" bindLabel="name" bindValue="name" [multiple]="true"
+          placeholder="-- Sélectionner des competences --" formControlName="competences">
+        </ng-select>
+      </div>
 
-</div>
-
-<!-- Select Poste -->
-<div class="col-md-6 mb-3">
-  <label for="poste" class="form-label">Poste</label>
-  <select formControlName="postes" class="form-select" id="poste">
-    <option [ngValue]="null">-- Sélectionner un poste --</option>
-    <option *ngFor="let p of postes" [value]="p.id">{{ p.intitule }}</option>
-  </select>
-</div>
-   
-<div class="col-sm-6 mb-3">
-  <label class="form-label">Compétences</label>
-  <ng-select
-    [items]="competences"
-    bindLabel="name"
-    bindValue="name"
-    [multiple]="true"
-    placeholder="-- Sélectionner des competences --"
-    formControlName="competences">
-  </ng-select>
-</div> 
-
-
-</div>
-
-  
-
-
-<!-- <div class="col-md-6 mb-3">
-  <label for="competences" class="form-label">Compétences</label>
-  <select formControlName="competences" class="form-select" id="competences" multiple>
-    <option *ngFor="let d of competences" [ngValue]="d">{{ d.name }}</option>
-  </select>
-</div> -->
-
-
-
-<div class="col-md-6 mb-3">
-    <label for="contrat" class="form-label">Contrat</label>
-    <select formControlName="contrat" class="form-select" id="contrat">
-      <option [ngValue]="null">-- Sélectionner un contrat --</option>
-      <option *ngFor="let d of contrat">{{ d.name }}</option>
-    </select>
-  </div>
-
+      <div class="col-md-6 mb-3">
+        <label for="contrat" class="form-label">Contrat</label>
+        <select formControlName="contrat" class="form-select" id="contrat">
+          <option [ngValue]="null">-- Sélectionner un contrat --</option>
+          <option *ngFor="let d of contrat">{{ d.name }}</option>
+        </select>
+      </div>
+    
       <div class="col-sm-4">
         <div class="mb-3">
           <label for="telephone" class="form-label">Téléphone<small style="color: red;">*</small></label>
@@ -240,25 +179,27 @@
             formControlName="telephone">
         </div>
       </div>
+    </div>
+
+    
 
 
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+      <button type="button" class="btn btn-primary" (click)="create()">Enregistrer</button>
+    </div>
   </form>
-
-  <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
-    <button type="button" class="btn btn-primary" (click)="create()">Enregistrer</button>
-  </div>
 </section>
+
 
 <section *ngIf="isSearch">
   <form [formGroup]="form">
     <div class="row">
-
       <div class="col-sm-6">
         <div class="mb-3">
           <label for="nomComplet" class="form-label">Nom complet</label>
           <input type="text" class="form-control form-control-lg" id="nomComplet" placeholder="Nom complet"
-            formControlName="matricule">
+            formControlName="nomComplet">
         </div>
       </div>
 
@@ -270,18 +211,22 @@
         </div>
       </div>
 
-        <div class="row mb-3">
+      <!-- <div class="row mb-3">
+        <div class="col-sm-4">
+          <label for="dateNaissance" class="form-label">Date </label>
+          <input type="date" class="form-control form-control-lg" id="dateNaissance" placeholder="Date de naissance"
+            formControlName="dateNaissance">
+        </div>
+
         <div class="col-sm-4">
           <label for="dateMin" class="form-label">Date minimum</label>
-          <input type="date" id="dateMin" class="form-control" [(ngModel)]="dateMin">
+          <input type="date" id="dateMin" class="form-control" formControlName="dateMin">
         </div>
         <div class="col-sm-4">
           <label for="dateMax" class="form-label">Date maximum</label>
-          <input type="date" id="dateMax" class="form-control" [(ngModel)]="dateMax">
+          <input type="date" id="dateMax" class="form-control" formControlName="dateMax">
         </div>
-        
-      </div>
-      
+      </div> -->
 
       <div class="col-sm-6">
         <div class="mb-3">
@@ -291,66 +236,153 @@
         </div>
       </div>
 
-
-
       <div class="col-sm-6">
         <div class="mb-3">
           <label for="description" class="form-label">Description</label>
-          <textarea type="text" class="form-control form-control-lg" id="description" placeholder="Description"
+          <textarea class="form-control form-control-lg" id="description" placeholder="Description"
             formControlName="description"></textarea>
         </div>
       </div>
 
-
-      <div class="col-sm-6">
-        <div class="mb-3">
-          <label for="age" class="form-label">Age</label>
-          <input type="number" class="form-control form-control-lg" id="age" placeholder="Age" formControlName="age">
+      <!-- Section Notes avec opérateurs -->
+      <div class="col-12 mb-3">
+        <label class="form-label">Notes</label>
+        <div class="row">
+          <div class="col-sm-3 mb-2">
+            <select class="form-select" formControlName="notesOperator">
+              <option value="eq">Égal à</option>
+              <option value="gt">Supérieur à</option>
+              <option value="lt">Inférieur à</option>
+              <option value="between">Entre</option>
+            </select>
+          </div>
+          <div class="col-sm-3 mb-2" *ngIf="form.get('notesOperator')?.value !== 'between'">
+            <input type="number" class="form-control" placeholder="Valeur" formControlName="notesValue">
+          </div>
+          <div class="col-sm-3 mb-2" *ngIf="form.get('notesOperator')?.value === 'between'">
+            <input type="number" class="form-control" placeholder="Min" formControlName="notesMin">
+          </div>
+          <div class="col-sm-3 mb-2" *ngIf="form.get('notesOperator')?.value === 'between'">
+            <input type="number" class="form-control" placeholder="Max" formControlName="notesMax">
+          </div>
         </div>
       </div>
 
-
-      <div class="col-sm-6">
-        <div class="mb-3">
-          <label for="dateNaissance" class="form-label">Date </label>
-          <input type="date" class="form-control form-control-lg" id="dateNaissance" placeholder="Date de naissance"
-            formControlName="dateNaissance">
+      <!-- Section Âge avec opérateurs -->
+      <div class="col-12 mb-3">
+        <label class="form-label">Âge</label>
+        <div class="row">
+          <div class="col-sm-3 mb-2">
+            <select class="form-select" formControlName="ageOperator">
+              <option value="eq">Égal à</option>
+              <option value="gt">Supérieur à</option>
+              <option value="lt">Inférieur à</option>
+              <option value="between">Entre</option>
+            </select>
+          </div>
+          <div class="col-sm-3 mb-2" *ngIf="form.get('ageOperator')?.value !== 'between'">
+            <input type="number" class="form-control" placeholder="Valeur" formControlName="ageValue">
+          </div>
+          <div class="col-sm-3 mb-2" *ngIf="form.get('ageOperator')?.value === 'between'">
+            <input type="number" class="form-control" placeholder="Min" formControlName="ageMin">
+          </div>
+          <div class="col-sm-3 mb-2" *ngIf="form.get('ageOperator')?.value === 'between'">
+            <input type="number" class="form-control" placeholder="Max" formControlName="ageMax">
+          </div>
         </div>
       </div>
 
-
-      <div class="col-sm-6">
-        <div class="mb-3">
-          <label for="heure" class="form-label">Heure<small style="color: red;">*</small></label>
-          <input type="time" class="form-control form-control-lg" id="heure" placeholder="Heure"
-            formControlName="heure">
-        </div>
-      </div>
-
-      <!-- <div class="col-md-6 col-sm-12 mb-3">
-        <label class="form-label">Sexe</label>
-        <div class="d-flex gap-3">
-          <div *ngFor="let option of sexe">
-            <input type="radio" [id]="option.name" [value]="option.name" formControlName="sexe" name="sexe">
-            <label [for]="option.name">{{ option.description }}</label>
+      <!-- Section Date avec opérateurs -->
+      <!-- <div class="col-12 mb-3">
+        <label class="form-label">Date de naissance</label>
+        <div class="row">
+          <div class="col-sm-3 mb-2">
+            <select class="form-select" formControlName="dateOperator">
+              <option value="eq">Égal à</option>
+              <option value="gt">Après le</option>
+              <option value="lt">Avant le</option>
+              <option value="between">Entre</option>
+            </select>
+          </div>
+          <div class="col-sm-3 mb-2" *ngIf="form.get('dateOperator')?.value !== 'between'">
+            <input type="date" class="form-control" formControlName="dateValue">
+          </div>
+          <div class="col-sm-3 mb-2" *ngIf="form.get('dateOperator')?.value === 'between'">
+            <input type="date" class="form-control" placeholder="Date début" formControlName="dateStart">
+          </div>
+          <div class="col-sm-3 mb-2" *ngIf="form.get('dateOperator')?.value === 'between'">
+            <input type="date" class="form-control" placeholder="Date fin" formControlName="dateEnd">
           </div>
         </div>
       </div> -->
 
-      <div class="col-md-6 col-sm-12 mb-3">
-  <label class="form-label">Sexe</label>
-  <div class="d-flex gap-3">
-    <div *ngFor="let option of sexe">
-      <input type="checkbox"
-             [id]="option.name"
-             [value]="option.name"
-             (change)="onSexeChange($event)">
-      <label [for]="option.name">{{ option.description }}</label>
+      <!-- Section Date avec opérateurs -->
+<div class="col-12 mb-3">
+  <label class="form-label">Date de naissance</label>
+  <div class="row">
+    <div class="col-sm-3 mb-2">
+      <select class="form-select" formControlName="dateOperator">
+        <option value="eq">Égal à</option>
+        <option value="gt">Après le</option>
+        <option value="lt">Avant le</option>
+        <option value="between">Entre</option>
+      </select>
+    </div>
+    <div class="col-sm-3 mb-2" *ngIf="form.get('dateOperator')?.value !== 'between'">
+      <input type="date" class="form-control" formControlName="dateValue">
+    </div>
+    <div class="col-sm-3 mb-2" *ngIf="form.get('dateOperator')?.value === 'between'">
+      <input type="date" class="form-control" placeholder="Date début" formControlName="dateStart">
+    </div>
+    <div class="col-sm-3 mb-2" *ngIf="form.get('dateOperator')?.value === 'between'">
+      <input type="date" class="form-control" placeholder="Date fin" formControlName="dateEnd">
+    </div>
+  </div>
+</div>
+
+      <!-- <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="heure" class="form-label">Heure</label>
+          <input type="time" class="form-control form-control-lg" id="heure" placeholder="Heure"
+            formControlName="heure">
+        </div>
+      </div> -->
+
+
+      <!-- Section Heure avec opérateurs -->
+<div class="col-12 mb-3">
+  <label class="form-label">Heure</label>
+  <div class="row">
+    <div class="col-sm-3 mb-2">
+      <select class="form-select" formControlName="heureOperator">
+        <option value="eq">Égal à</option>
+        <option value="gt">Après</option>
+        <option value="lt">Avant</option>
+        <option value="between">Entre</option>
+      </select>
+    </div>
+    <div class="col-sm-3 mb-2" *ngIf="form.get('heureOperator')?.value !== 'between'">
+      <input type="time" class="form-control" formControlName="heureValue">
+    </div>
+    <div class="col-sm-3 mb-2" *ngIf="form.get('heureOperator')?.value === 'between'">
+      <input type="time" class="form-control" placeholder="Heure début" formControlName="heureStart">
+    </div>
+    <div class="col-sm-3 mb-2" *ngIf="form.get('heureOperator')?.value === 'between'">
+      <input type="time" class="form-control" placeholder="Heure fin" formControlName="heureEnd">
     </div>
   </div>
 </div>
 
 
+      <div class="col-md-6 col-sm-12 mb-3">
+        <label class="form-label">Sexe</label>
+        <div class="d-flex gap-3">
+          <div *ngFor="let option of sexe">
+            <input type="checkbox" [id]="option.name" [value]="option.name" (change)="onSexeChange($event)">
+            <label [for]="option.name">{{ option.description }}</label>
+          </div>
+        </div>
+      </div>
 
       <div class="col-md-6 col-sm-12 mb-3">
         <label class="form-label">Preferences</label>
@@ -362,29 +394,20 @@
           </div>
         </div>
       </div>
-        </div>
-              <div class="mb-3">
-          <label class="form-label">Pays de résidence</label>
-          <div class="d-flex gap-3 flex-wrap">
-            <div *ngFor="let pays of listePays">
-              <input type="checkbox"
-                    [id]="pays.code"
-                    [value]="pays.libelle"
-                    (change)="onPaysChange($event)">
-              <label [for]="pays.code">{{ pays.libelle }}</label>
+
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="pays">Pays de résidence <span class="text-danger">*</span></label>
+          <div class="input-group">
+            <input type="text" class="form-control" [value]="form.get('pays')?.value" disabled>
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary" type="button" (click)="openPaysModal()">
+                <i class="fas fa-search"></i>
+              </button>
             </div>
           </div>
         </div>
-
-        <ng-template choixPays let-modal>
-  <div class="modal-header">
-    <h5 class="modal-title" id="exampleModalLabel">Selectionner un Pays</h5>
-    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
-  </div>
-  <div class="modal-body">
-    <app-choix-pays></app-choix-pays>
-  </div>
-</ng-template>
+      </div>
 
       <div class="col-sm-4">
         <div class="mb-3">
@@ -392,13 +415,112 @@
           <input type="text" class="form-control form-control-lg" id="telephone" placeholder="Téléphone"
             formControlName="telephone">
         </div>
-
       </div>
+    </div>
+
+    <!-- ✅ footer placé à l'intérieur -->
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+      <button class="btn btn-primary" (click)="doSearch()">Rechercher</button>
+    </div>
   </form>
-
-  <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
-    <button type="button" class="btn btn-primary" (click)="doSearch()">Rechercher</button>
-  </div>
-
 </section>
+
+<!-- Modal pour sélection des pays -->
+<ng-template #paysModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">
+      <span *ngIf="!isSearch">Sélectionner un pays de résidence</span>
+      <span *ngIf="isSearch">Sélectionner des pays de résidence</span>
+    </h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  
+  <div class="modal-body">
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th width="50px">Sélection</th>
+            <th>Code Pays</th>
+            <th>Libellé</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let pays of listePays" (click)="onPaysRowClick(pays)">
+            <td>
+              <!-- Mode ajout : Radio buttons -->
+              <input 
+                *ngIf="!isSearch"
+                type="radio" 
+                name="paysSelection"
+                [value]="pays.id"
+                [checked]="isPaysSelected(pays.id)"
+                (change)="onPaysSelectionChange(pays, $event)">
+              
+              <!-- Mode recherche : Checkboxes -->
+              <input 
+                *ngIf="isSearch"
+                type="checkbox"
+                [checked]="isPaysSelected(pays.id)"
+                (change)="onPaysSelectionChange(pays, $event)">
+            </td>
+            <td>{{ pays.code }}</td>
+            <td>{{ pays.libelle }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Annuler</button>
+    <button type="button" class="btn btn-primary" (click)="validatePaysSelection(modal)" 
+            [disabled]="!hasValidSelection()">
+      Valider
+    </button>
+  </div>
+</ng-template>
+
+
+<!-- Modal pour sélection des filières -->
+<ng-template #filiereModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Sélectionner des filières suivies</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  
+  <div class="modal-body">
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th width="50px">Sélection</th>
+            <th>Code Filière</th>
+            <th>Libellé</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let filiere of listeFilieres" (click)="onFiliereRowClick(filiere)">
+            <td>
+              <input 
+                type="checkbox"
+                [checked]="isFiliereSelected(filiere.id)"
+                (change)="onFiliereSelectionChange(filiere, $event)">
+            </td>
+            <td>{{ filiere.code }}</td>
+            <td>{{ filiere.libelle }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Annuler</button>
+    <button type="button" class="btn btn-primary" (click)="validateFiliereSelection(modal)" 
+            [disabled]="!hasValidFiliereSelection()">
+      Valider
+    </button>
+  </div>
+</ng-template>

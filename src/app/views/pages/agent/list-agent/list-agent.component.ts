@@ -20,8 +20,11 @@ export class ListAgentComponent implements OnInit {
     'dateNaissance',
     'heure',
     'sexe',
+    'notes',
     'preferences',
     'pays',
+    'filiere',
+
     'telephone',
     'actions'
   ];
@@ -57,8 +60,13 @@ export class ListAgentComponent implements OnInit {
         
         //  Gestion flexible de la structure des données
         if (response) {
+          // Si c'est une réponse avec payload (votre API)
+          if (response.payload && Array.isArray(response.payload)) {
+            this.dataSource = response;
+            console.log(' Réponse avec payload détectée');
+          }
           // Si c'est une réponse paginée (ex: Spring Boot)
-          if (response.content && Array.isArray(response.content)) {
+          else if (response.content && Array.isArray(response.content)) {
             this.dataSource = response.content;
             console.log(' Données paginées détectées');
           }

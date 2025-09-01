@@ -23,6 +23,7 @@ export class AgentService {
   }
 
   getAllAgents(req?: any): Observable<any> {
+    console.log('🔍 Service getAllAgents appelé avec:', req);
     let parametres: HttpParams = new HttpParams()
     if(req){
       if(req?.nomComplet){
@@ -33,6 +34,30 @@ export class AgentService {
       }
       if(req?.notes){
         parametres = parametres.append("notes", req.notes);
+      }
+      if(req?.notesMin){
+        parametres = parametres.append("notesMin", req.notesMin);
+      }
+      if(req?.notesMax){
+        parametres = parametres.append("notesMax", req.notesMax);
+      }
+      if(req?.notesEqual){
+        parametres = parametres.append("notesEqual", req.notesEqual);
+      }
+      if(req?.ageMin){
+        parametres = parametres.append("ageMin", req.ageMin);
+      }
+      if(req?.ageMax){
+        parametres = parametres.append("ageMax", req.ageMax);
+      }
+      if(req?.ageEqual){
+        parametres = parametres.append("ageEqual", req.ageEqual);
+      }
+      if(req?.dateMin){
+        parametres = parametres.append("dateMin", req.dateMin);
+      }
+      if(req?.dateMax){
+        parametres = parametres.append("dateMax", req.dateMax);
       }
       if(req?.description){
         parametres = parametres.append("description", req.description);
@@ -59,10 +84,11 @@ export class AgentService {
         parametres = parametres.append("telephone", req.telephone);
       }  
 
-      return this.http.get<any>(
-        `${environment.baseUrl}agents/all?page=${req?.page}&size=${req?.size}`,
-        { params: parametres }
-      );
+      const url = `${environment.baseUrl}agents/all?page=${req?.page}&size=${req?.size}`;
+      console.log('🔍 URL de requête:', url);
+      console.log('🔍 Paramètres HTTP:', parametres.toString());
+      
+      return this.http.get<any>(url, { params: parametres });
     } else {
       return this.http.get<any>(
         `${environment.baseUrl}agents/all?page=0&size=100000`,
@@ -103,6 +129,11 @@ export class AgentService {
  // 🔹 PAYS
   getAllPays(): Observable<any[]> {
     return this.http.get<any>(`${environment.baseUrl}pays/all`)
+      .pipe(map(res => res.payload));
+  }
+  // 🔹 PAYS
+  getAllFilere(): Observable<any[]> {
+    return this.http.get<any>(`${environment.baseUrl}filieres-suivi/all`)
       .pipe(map(res => res.payload));
   }
 

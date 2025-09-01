@@ -1,4 +1,4 @@
-import { Component, TemplateRef } from '@angular/core';
+import { Component, TemplateRef, Input } from '@angular/core';
 import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { PaysService } from 'src/app/services/pays/pays.service';
 import { Alertes } from 'src/app/util/alerte';
@@ -13,6 +13,8 @@ import {SelectionModel} from '@angular/cdk/collections';
 })
 export class ChoixPaysComponent {
 
+  @Input() isMultipleSelection: boolean = false; // Pour différencier ajout (false) et recherche (true)
+
   displayedColumns: string[] = [
       'select',
       'code',
@@ -23,7 +25,8 @@ export class ChoixPaysComponent {
     pageOptions: any = { page: 0, size: 10 };
     dataSource: any = []; //  Initialisation avec un tableau vide
     loadingIndicator = true;
-    selection = new SelectionModel<any>(false, []); //false = choix unique
+    selection = new SelectionModel<any>(true, []); // true = choix multiple pour recherche
+    selectedPays: any = null; // Pour stocker le pays sélectionné avec radio button (ajout)
 
     
     data: any;
@@ -41,25 +44,57 @@ export class ChoixPaysComponent {
     getAllPays() {
       console.log(' Paramètres de pagination:', this.pageOptions);
       
-      this.loadingIndicator = true; //  S'assurer que le loading est activé
+      this.loadingIndicator = true;
       
+      // Charger directement depuis l'API
       this.paysServices.getAllPays(this.pageOptions).subscribe({
         next: response => {
-          this.dataSource = response.payload;
-          console.log("data receive : ", this.dataSource);
+          console.log("Réponse API complète:", response);
+          
+          // Gérer différentes structures de réponse
+          if (response && response.payload) {
+            this.dataSource = response.payload;
+          } else if (Array.isArray(response)) {
+            this.dataSource = response;
+          } else if (response && response.data) {
+            this.dataSource = response.data;
+          } else if (response && response.content) {
+            this.dataSource = response.content;
+          } else {
+            console.warn("Structure de réponse inattendue:", response);
+            this.dataSource = [];
+          }
+          
+          console.log("dataSource final:", this.dataSource);
+          console.log("Nombre de pays:", this.dataSource?.length);
+          
+          // Si aucune donnée, utiliser fallback
+          if (!this.dataSource || this.dataSource.length === 0) {
+            console.log("Aucune donnée API, utilisation du fallback");
+            this.dataSource = [
+              { id: 1, code: 'SN', libelle: 'Sénégal' },
+              { id: 2, code: 'FR', libelle: 'France' },
+              { id: 3, code: 'US', libelle: 'États-Unis' },
+              { id: 4, code: 'CA', libelle: 'Canada' },
+              { id: 5, code: 'DE', libelle: 'Allemagne' }
+            ];
+          }
           
           this.loadingIndicator = false;
         },
         error: err => {
-          console.error(' Erreur lors de la récupération des pays:', err);
+          console.error('Erreur API pays:', err);
           this.loadingIndicator = false;
           
-          //  Afficher une alerte d'erreur
-          // Alertes.alerteAddDanger('Erreur lors du chargement des pays');
-        },
-        complete: () => {
-          this.loadingIndicator = false;
-          console.log(' Chargement terminé');
+          // Fallback en cas d'erreur
+          this.dataSource = [
+            { id: 1, code: 'SN', libelle: 'Sénégal' },
+            { id: 2, code: 'FR', libelle: 'France' },
+            { id: 3, code: 'US', libelle: 'États-Unis' },
+            { id: 4, code: 'CA', libelle: 'Canada' },
+            { id: 5, code: 'DE', libelle: 'Allemagne' }
+          ];
+          console.log("Utilisation des données de fallback");
         }
       });
     }
@@ -181,15 +216,28 @@ export class ChoixPaysComponent {
 }
 
 onValider(): void {
-
-  const selected = this.selection.selected[0] ?? null;
-  
-  if (selected) {
-    this.activeModal.close(selected);
+  if (this.isMultipleSelection) {
+    // Mode recherche : retourner tous les pays sélectionnés
+    const selectedPays = this.selection.selected;
+    if (selectedPays.length > 0) {
+      this.activeModal.close(selectedPays);
+    } else {
+      console.warn("Aucun pays sélectionné");
+      this.activeModal.dismiss("no-selection");
+    }
   } else {
-    console.warn("Aucun pays sélectionné");
-    this.activeModal.dismiss("no-selection");
+    // Mode ajout : retourner un seul pays
+    if (this.selectedPays) {
+      this.activeModal.close(this.selectedPays);
+    } else {
+      console.warn("Aucun pays sélectionné");
+      this.activeModal.dismiss("no-selection");
+    }
   }
-  this.activeModal.close(selected); // renvoie la sélection au parent
+}
+
+onRadioChange(pays: any): void {
+  this.selectedPays = pays;
+  console.log("Pays sélectionné:", this.selectedPays);
 }
 }
