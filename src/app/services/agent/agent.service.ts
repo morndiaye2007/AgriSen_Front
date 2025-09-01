@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, map } from 'rxjs';
+import { Observable, map, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -126,6 +126,12 @@ export class AgentService {
   downloadFichier(id: number): Observable<Blob> {
   return this.http.get(`${environment.baseUrl}/download/${id}`, { responseType: 'blob' });
 }
+
+  // Vérifier si un matricule existe déjà
+  checkMatriculeExists(matricule: string): Observable<boolean> {
+    return this.http.get<any>(`${environment.baseUrl}agents/check-matricule/${matricule}`);
+  }
+
  // 🔹 PAYS
   getAllPays(): Observable<any[]> {
     return this.http.get<any>(`${environment.baseUrl}pays/all`)

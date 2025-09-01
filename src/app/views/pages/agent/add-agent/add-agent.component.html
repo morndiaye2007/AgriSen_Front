@@ -9,11 +9,16 @@
         </div>
       </div>
 
+      
+
       <div class="col-sm-6">
         <div class="mb-3">
           <label for="matricule" class="form-label">Matricule<small style="color: red;">*</small></label>
           <input type="text" class="form-control form-control-lg" id="matricule" placeholder="Matricule"
-            formControlName="matricule">
+            formControlName="matricule" [ngClass]="{'is-invalid': form.get('matriculeExists')?.value}">
+          <div *ngIf="form.get('matriculeExists')?.value" class="invalid-feedback">
+            Ce matricule est déjà utilisé par un autre agent.
+          </div>
         </div>
       </div>
 
@@ -437,9 +442,9 @@
   </div>
   
   <div class="modal-body">
-    <div class="table-responsive">
+    <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
       <table class="table table-striped">
-        <thead>
+        <thead class="sticky-top bg-white">
           <tr>
             <th width="50px">Sélection</th>
             <th>Code Pays</th>
@@ -481,6 +486,8 @@
     </button>
   </div>
 </ng-template>
+
+
 
 
 <!-- Modal pour sélection des filières -->

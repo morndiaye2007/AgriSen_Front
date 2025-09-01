@@ -113,12 +113,31 @@ competences = [
    this.loadLangues()
    this.loadPays();
    this.loadFilieres();
+   }
+  
+  // Vérifier si le matricule existe déjà
+  checkMatriculeExists(matricule: string): Promise<boolean> {
+    return new Promise((resolve) => {
+      // Utiliser getAllAgents avec le matricule comme filtre pour vérifier l'existence
+      this.agentService.getAllAgents({matricule: matricule}).subscribe({
+        next: (response) => {
+          const exists = response && response.payload && response.payload.length > 0;
+          this.form.get('matriculeExists')?.setValue(exists);
+          resolve(exists);
+        },
+        error: (error) => {
+          console.error('Erreur lors de la vérification du matricule:', error);
+          resolve(false);
+        }
+      });
+    });
   }
   initForm(){
     this.form = new FormGroup(
       {
         nomComplet: new FormControl("", Validators.required),
         matricule: new FormControl("", Validators.required),
+        matriculeExists: new FormControl(false),
         motdepasse: new FormControl(""),
         email: new FormControl("", Validators.required),
         description: new FormControl(""),
@@ -299,19 +318,19 @@ loadDepartements(): void {
         break;
       case 'gt':
         if (formValue.notesValue !== '' && formValue.notesValue !== null && formValue.notesValue !== undefined) {
-          searchData.notes_gt = String(formValue.notesValue);
+          searchData.notesMin = String(formValue.notesValue);
         }
         break;
       case 'lt':
         if (formValue.notesValue !== '' && formValue.notesValue !== null && formValue.notesValue !== undefined) {
-          searchData.notes_lt = String(formValue.notesValue);
+          searchData.notesMax = String(formValue.notesValue);
         }
         break;
       case 'between':
         if (formValue.notesMin !== '' && formValue.notesMin !== null && formValue.notesMin !== undefined &&
             formValue.notesMax !== '' && formValue.notesMax !== null && formValue.notesMax !== undefined) {
-          searchData.notes_min = String(formValue.notesMin);
-          searchData.notes_max = String(formValue.notesMax);
+          searchData.notesMin = String(formValue.notesMin);
+          searchData.notesMax = String(formValue.notesMax);
         }
         break;
     }
@@ -322,24 +341,24 @@ loadDepartements(): void {
     switch(formValue.ageOperator) {
       case 'eq':
         if (formValue.ageValue !== '' && formValue.ageValue !== null && formValue.ageValue !== undefined) {
-          searchData.age = String(formValue.ageValue);
+          searchData.ageEqual = String(formValue.ageValue);
         }
         break;
       case 'gt':
         if (formValue.ageValue !== '' && formValue.ageValue !== null && formValue.ageValue !== undefined) {
-          searchData.age_gt = String(formValue.ageValue);
+          searchData.ageMin = String(formValue.ageValue);
         }
         break;
       case 'lt':
         if (formValue.ageValue !== '' && formValue.ageValue !== null && formValue.ageValue !== undefined) {
-          searchData.age_lt = String(formValue.ageValue);
+          searchData.ageMax = String(formValue.ageValue);
         }
         break;
       case 'between':
         if (formValue.ageMin !== '' && formValue.ageMin !== null && formValue.ageMin !== undefined &&
             formValue.ageMax !== '' && formValue.ageMax !== null && formValue.ageMax !== undefined) {
-          searchData.age_min = String(formValue.ageMin);
-          searchData.age_max = String(formValue.ageMax);
+          searchData.ageMin = String(formValue.ageMin);
+          searchData.ageMax = String(formValue.ageMax);
         }
         break;
     }
@@ -350,23 +369,23 @@ loadDepartements(): void {
     switch(formValue.dateOperator) {
       case 'eq':
         if (formValue.dateValue) {
-          searchData.dateNaissance = formValue.dateValue;
+          searchData.dateNaissanceEqual = formValue.dateValue;
         }
         break;
       case 'gt':
         if (formValue.dateValue) {
-          searchData.dateNaissance_gt = formValue.dateValue;
+          searchData.dateMin = formValue.dateValue;
         }
         break;
       case 'lt':
         if (formValue.dateValue) {
-          searchData.dateNaissance_lt = formValue.dateValue;
+          searchData.dateMax = formValue.dateValue;
         }
         break;
       case 'between':
         if (formValue.dateStart && formValue.dateEnd) {
-          searchData.dateNaissance_min = formValue.dateStart;
-          searchData.dateNaissance_max = formValue.dateEnd;
+          searchData.dateMin = formValue.dateStart;
+          searchData.dateMax = formValue.dateEnd;
         }
         break;
     }
@@ -377,23 +396,23 @@ loadDepartements(): void {
     switch(formValue.heureOperator) {
       case 'eq':
         if (formValue.heureValue) {
-          searchData.heure = formValue.heureValue;
+          searchData.heureEqual = formValue.heureValue;
         }
         break;
       case 'gt':
         if (formValue.heureValue) {
-          searchData.heure_gt = formValue.heureValue;
+          searchData.heureMin = formValue.heureValue;
         }
         break;
       case 'lt':
         if (formValue.heureValue) {
-          searchData.heure_lt = formValue.heureValue;
+          searchData.heureMax = formValue.heureValue;
         }
         break;
       case 'between':
         if (formValue.heureStart && formValue.heureEnd) {
-          searchData.heure_min = formValue.heureStart;
-          searchData.heure_max = formValue.heureEnd;
+          searchData.heureMin = formValue.heureStart;
+          searchData.heureMax = formValue.heureEnd;
         }
         break;
     }
