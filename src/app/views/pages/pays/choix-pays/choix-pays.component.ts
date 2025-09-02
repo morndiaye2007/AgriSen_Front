@@ -1,8 +1,10 @@
-import { Component, TemplateRef } from '@angular/core';
+import { Component, TemplateRef, Input, ViewChild } from '@angular/core';
 import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { PaysService } from 'src/app/services/pays/pays.service';
 import { Alertes } from 'src/app/util/alerte';
 import {SelectionModel} from '@angular/cdk/collections';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSort, Sort } from '@angular/material/sort';
 
 
 
@@ -12,6 +14,9 @@ import {SelectionModel} from '@angular/cdk/collections';
   styleUrls: ['./choix-pays.component.scss']
 })
 export class ChoixPaysComponent {
+checkboxLabel(_t20: any): string {
+throw new Error('Method not implemented.');
+}
 
   displayedColumns: string[] = [
       'select',
@@ -21,9 +26,13 @@ export class ChoixPaysComponent {
     
     paysToUpdate: any;
     pageOptions: any = { page: 0, size: 10 };
-    dataSource: any = []; //  Initialisation avec un tableau vide
+    dataSource: MatTableDataSource<any> = new MatTableDataSource<any>([]); // Utilisation de MatTableDataSource
     loadingIndicator = true;
     selection = new SelectionModel<any>(false, []); //false = choix unique
+    searchTerm: string = '';
+    totalItems: number = 0;
+    
+    @ViewChild(MatSort) sort!: MatSort;
 
     
     data: any;
@@ -43,11 +52,32 @@ export class ChoixPaysComponent {
       
       this.loadingIndicator = true; //  S'assurer que le loading est activé
       
-      this.paysServices.getAllPays(this.pageOptions).subscribe({
+      // Ajout du paramètre de tri si disponible
+      let params = { ...this.pageOptions };
+      if (this.sort && this.sort.active) {
+        params['sort'] = this.sort.active;
+        params['direction'] = this.sort.direction;
+      }
+      
+      this.paysServices.getAllPays(params).subscribe({
         next: response => {
-          this.dataSource = response.payload;
-          console.log("data receive : ", this.dataSource);
+          // Mise à jour du dataSource avec les données reçues
+          const data = response.payload || [];
+          this.dataSource = new MatTableDataSource(data);
           
+          // Configuration du tri et du filtre
+          this.dataSource.sort = this.sort;
+          this.dataSource.filterPredicate = (data: any, filter: string) => {
+            return data.code?.toLowerCase().includes(filter.toLowerCase()) || 
+                   data.libelle?.toLowerCase().includes(filter.toLowerCase());
+          };
+          
+          // Mise à jour du nombre total d'éléments pour la pagination
+          if (response.metadata) {
+            this.totalItems = response.metadata.totalElements || 0;
+          }
+          
+          console.log("data receive : ", this.dataSource.data);
           this.loadingIndicator = false;
         },
         error: err => {
@@ -76,59 +106,35 @@ export class ChoixPaysComponent {
         console.warn(' Événement de pagination invalide:', $event);
       }
     }
-  
-    // openAddPays(content: TemplateRef<any>) {
-    //   this.openModal(content, 'lg');
-    // }
-  
-    // openEditPays(content: TemplateRef<any>, pays: any) {
-    //   this.paysToUpdate = pays;
-    //   console.log(" Pays à modifier:", this.paysToUpdate);
-    //   this.openModal(content, 'lg');
-    // }
-  
-    // DeletePays(pays: any) {
-    //   if (!pays) {
-    //     console.warn(' Aucun pays sélectionné pour suppression');
-    //     return;
-    //   }
+    
+    // Méthode pour appliquer le filtre de recherche
+    applyFilter() {
+      if (this.dataSource) {
+        this.dataSource.filter = this.searchTerm.trim().toLowerCase();
+        
+        // Si nous sommes sur une page autre que la première et qu'il n'y a pas de résultats après filtrage
+        if (this.dataSource.paginator) {
+          this.dataSource.paginator.firstPage();
+        }
+      }
+    }
+    
+    // Méthode pour trier les données
+    sortData(sort: Sort | any) {
+      // Cast to Sort if it's an event object
+      const sortEvent = sort as Sort;
+      if (!sortEvent.active || sortEvent.direction === '') {
+        return;
+      }
       
-    //   Alertes.confirmAction("Voulez-vous supprimer ?", "Ce pays sera supprimé", () => {
-    //     this.deletePays(pays);
-    //   });
-    // }
-  
-//    openModal(content: TemplateRef<any>, size: any) {
-//   this.modalRef = this.modalService.open(content, { size: size, backdrop: 'static' });
-//   this.modalRef.result.then((result) => {
-//     console.log('Modal fermée avec résultat:', result);
-//     // Ici tu peux faire une action après validation
-//   }).catch((res) => {
-//     console.log('Modal fermée sans résultat:', res);
-//   });
-// }
-  
-    // deletePays(pays: any) {
-    //   Alertes.confirmAction( 
-    //     'Voulez-vous supprimer ?',
-    //     'Cet élément sera définitivement supprimé',
-    //     () => {
-    //       this.paysServices.deletePays(pays).subscribe({
-    //         next: (value) => {
-    //           console.log(' Pays supprimé:', value);
-    //           Alertes.alerteAddSuccess('Suppression réussie');
-    //         },
-    //         error: (value) => {
-    //           console.error(' Erreur suppression:', value);
-    //           Alertes.alerteAddDanger(value.error?.message || 'Erreur lors de la suppression');
-    //         },
-    //         complete: () => {
-    //           this.getAllPays();
-    //         },
-    //       });
-    //     }
-    //   );
-    // }
+      // Si nous utilisons le tri côté serveur
+      this.pageOptions['sort'] = sortEvent.active;
+      this.pageOptions['direction'] = sortEvent.direction;
+      this.getAllPays();
+    }
+    
+    // Suppression des méthodes dupliquées (lignes 133-141)
+    // Les méthodes onValider et onFermer sont définies plus bas
   
     close() {
       this.modalService.dismissAll();
@@ -169,27 +175,27 @@ export class ChoixPaysComponent {
   }
 
   /** The label for the checkbox on the passed row */
-  checkboxLabel(row?: any): string {
-    if (!row) {
-      return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
+  // checkboxLabel(row?: any): string {
+  //   if (!row) {
+  //     return ${this.isAllSelected() ? 'deselect' : 'select'} all;
+  //   }
+  //   return ${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1};
+  // }
+
+  // Méthodes uniques pour fermer et valider
+  onFermer(): void {
+    this.activeModal.dismiss(); // ferme sans retour
+  }
+
+  onValider(): void {
+    const selected = this.selection.selected[0] ?? null;
+    
+    if (selected) {
+      this.activeModal.close(selected);
+    } else {
+      console.warn("Aucun pays sélectionné");
+      this.activeModal.dismiss("no-selection");
     }
-    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
   }
-
- onFermer(): void {
-  this.activeModal.dismiss(); // ferme sans retour
-}
-
-onValider(): void {
-
-  const selected = this.selection.selected[0] ?? null;
   
-  if (selected) {
-    this.activeModal.close(selected);
-  } else {
-    console.warn("Aucun pays sélectionné");
-    this.activeModal.dismiss("no-selection");
-  }
-  this.activeModal.close(selected); // renvoie la sélection au parent
-}
-}
+    }
