@@ -10,7 +10,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { ChoixPaysComponent } from './choix-pays/choix-pays.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 
@@ -24,7 +24,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     CommonModule,
     PaysRoutingModule,
     MatTableModule,
-    
+    NgbPaginationModule,
     NgbModule,
     FormsModule,
     ReactiveFormsModule,
