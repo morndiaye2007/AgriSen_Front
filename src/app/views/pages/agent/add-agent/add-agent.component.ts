@@ -307,11 +307,14 @@ goToFilierePage(page: number): void {
       paysId: new FormControl(null),
       filiereSuivi: new FormControl({ value: '', disabled: true }),
       filiereIds: new FormControl([]),
+      // multi-select search controls
+      posteIds: new FormControl([]),
+      typeContrats: new FormControl([]),
       telephone: new FormControl("", Validators.required),
-      postes: new FormControl("", Validators.required),
+      postes: new FormControl([], Validators.required),
       langues: new FormControl("", Validators.required),
       departements: new FormControl("", Validators.required),
-      contrat: new FormControl("", Validators.required),
+      contrat: new FormControl([], Validators.required),
       competences: new FormControl([], Validators.required),
       notes: new FormControl("", Validators.required),
       notesMin: new FormControl(""),
@@ -588,7 +591,11 @@ paginateFilieres(page: number) {
           formValue[key] !== '' && 
           formValue[key] !== null && 
           formValue[key] !== undefined) {
-        searchData[key] = formValue[key];
+        if (Array.isArray(formValue[key]) && (key === 'posteIds' || key === 'typeContrats')) {
+          searchData[key] = formValue[key].join(',');
+        } else {
+          searchData[key] = formValue[key];
+        }
       }
     });
     
@@ -776,7 +783,9 @@ paginateFilieres(page: number) {
             formValue[key] !== null && 
             formValue[key] !== undefined) {
           
-          if (key.includes('age') || key.includes('notes') || key === 'matricule') {
+          if (Array.isArray(formValue[key]) && (key === 'posteIds' || key === 'typeContrats')) {
+            searchData[key] = formValue[key].join(',');
+          } else if (key.includes('age') || key.includes('notes') || key === 'matricule') {
             searchData[key] = String(formValue[key]);
           } else {
             searchData[key] = formValue[key];

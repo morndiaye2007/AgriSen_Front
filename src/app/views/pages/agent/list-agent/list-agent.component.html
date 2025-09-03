@@ -9,6 +9,21 @@
 
     <!-- Boutons à droite -->
     <div class="d-flex justify-content-end align-items-center gap-2">
+        <!-- Sélecteur d'éléments par page -->
+        <div class="d-flex align-items-center me-3">
+            <label class="form-label me-2 mb-0">Éléments par page:</label>
+            <select class="form-select form-select-sm" style="width: auto;" 
+                    [(ngModel)]="pageOptions.size" (change)="onPageSizeChange()">
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+            </select>
+        </div>
+        <button type="button" class="btn btn-info btn-icon me-2" (click)="openColumnConfig()" title="Configurer les colonnes">
+            <i class="feather icon-settings"></i>
+        </button>
         <button type="button" class="btn btn-secondary btn-icon me-2" (click)="openAddAgent(SearchAgentModal)">
             <i class="feather icon-search"></i>
         </button>
@@ -24,15 +39,15 @@
         <section class="table-container mat-elevation-z8" tabindex="0">
             <!-- <app-spinner *ngIf="loadingIndicator" [displayedColumns]="displayedColumns"></app-spinner> -->
 
-            <table mat-table [dataSource]="dataSource?.payload">
+            <table mat-table [dataSource]="dataSource?.payload" matSort>
                 <ng-container matColumnDef="nomComplet">
-                    <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:100px;">Nom Complet</th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-head-text" style="min-width:100px;">Nom Complet</th>
                     <td mat-cell *matCellDef="let agent" class="text-left"> {{agent?.nomComplet}} </td>
                 </ng-container>
 
     
                 <ng-container matColumnDef="matricule">
-                    <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:50px;">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-head-text text-center" style="min-width:50px;">
                         Matricule </th>
                     <td mat-cell *matCellDef="let agent" class="text-center"> {{agent?.matricule}} </td>
                 </ng-container>
@@ -45,69 +60,69 @@
                 <!-- </ng-container> -->
                 
                 <ng-container matColumnDef="email">
-                    <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:50px;">
-                       Email </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-head-text text-center" style="min-width:50px;">
+                       Courriel </th>
                     <td mat-cell *matCellDef="let agent" class="text-center"> {{agent?.email}} </td>
                 </ng-container>
                  
                 <ng-container matColumnDef="description">
-                    <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:50px;">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-head-text text-center" style="min-width:50px;">
                        Description </th>
                     <td mat-cell *matCellDef="let agent" class="text-center"> {{agent?.description}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="age">
-                    <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:50px;">
-                       Age </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-head-text text-center" style="min-width:50px;">
+                       Âge </th>
                     <td mat-cell *matCellDef="let agent" class="text-center"> {{agent?.age}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="dateNaissance">
-                    <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:50px;">
-                       Date</th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-head-text text-center" style="min-width:50px;">
+                       Date de naissance</th>
                     <td mat-cell *matCellDef="let agent" class="text-center"> {{agent?.dateNaissance}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="heure">
-                    <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:50px;">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-head-text text-center" style="min-width:50px;">
                        Heure</th>
                     <td mat-cell *matCellDef="let agent" class="text-center"> {{agent?.heure}} </td>
                 </ng-container>
 
                 
                 <ng-container matColumnDef="sexe"> 
-                    <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:50px;">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-head-text text-center" style="min-width:50px;">
                         Sexe </th>
                     <td mat-cell *matCellDef="let agent" class="text-center"> {{agent?.sexe?.description}} </td>
                 </ng-container>
                
                 <ng-container matColumnDef="preferences"> 
                     <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:50px;">
-                        Preference(s) </th>
+                        Préférence(s) </th>
                     <td mat-cell *matCellDef="let agent" class="text-center"> {{getPreferences(agent?.preferences)}} </td>
                 </ng-container>
 
                  <ng-container matColumnDef="pays"> 
-                    <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:50px;">
-                        Pays de residence </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-head-text text-center" style="min-width:50px;">
+                        Pays de résidence </th>
                     <td mat-cell *matCellDef="let agent" class="text-center"> {{agent?.pays?.libelle}} </td>
                 </ng-container>
 
                   <ng-container matColumnDef="filiere"> 
-                    <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:50px;">
-                        Filiere </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-head-text text-center" style="min-width:50px;">
+                        Filière </th>
                     <td mat-cell *matCellDef="let agent" class="text-center"> {{agent?.filiere?.libelle}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="telephone">
-                    <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:50px;">
-                       Telephone </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-head-text text-center" style="min-width:50px;">
+                       Téléphone </th>
                     <td mat-cell *matCellDef="let agent" class="text-center"> {{agent?.telephone}} </td>
                 </ng-container>
 
                  <ng-container matColumnDef="notes">
-                    <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:50px;">
-                       notes </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-head-text text-center" style="min-width:50px;">
+                       Notes </th>
                     <td mat-cell *matCellDef="let agent" class="text-center"> {{agent?.notes}} </td>
                 </ng-container>
                      
@@ -131,8 +146,8 @@
                     </td>
                 </ng-container>
 
-                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="table-head-bg"></tr>
-                <tr mat-row *matRowDef="let emprow; columns: displayedColumns"></tr>
+                <tr mat-header-row *matHeaderRowDef="getVisibleColumns(); sticky: true" class="table-head-bg"></tr>
+                <tr mat-row *matRowDef="let emprow; columns: getVisibleColumns()"></tr>
             </table>
 
             <span *ngIf="dataSource?.payload?.length == 0" class="paginate text-danger mt-4">Les critères de recherche
@@ -184,3 +199,77 @@
     </div> 
 </ng-template>
 <!--End Edit agent-->
+
+<!-- Modal de configuration des colonnes -->
+<ng-template #columnConfigModal let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title">Configuration des colonnes</h5>
+        <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-md-6">
+                <h6>Colonnes disponibles</h6>
+                <div class="list-group" style="max-height: 400px; overflow-y: auto;">
+                    <div *ngFor="let column of availableColumns; trackBy: trackByColumn" 
+                         class="list-group-item d-flex justify-content-between align-items-center">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" 
+                                   [id]="'col-' + column.key"
+                                   [checked]="column.visible"
+                                   (change)="toggleColumnVisibility(column)">
+                            <label class="form-check-label" [for]="'col-' + column.key">
+                                {{ column.label }}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h6>Ordre des colonnes visibles</h6>
+                <div class="list-group" cdkDropList (cdkDropListDropped)="dropColumn($event)" style="max-height: 400px; overflow-y: auto;">
+                    <div *ngFor="let column of getVisibleColumnConfig(); trackBy: trackByColumn" 
+                         class="list-group-item d-flex justify-content-between align-items-center" 
+                         cdkDrag>
+                        <span>{{ column.label }}</span>
+                        <div>
+                            <button class="btn btn-sm btn-outline-secondary me-1" 
+                                    (click)="moveColumnUp(column)" 
+                                    [disabled]="isFirstVisibleColumn(column)"
+                                    title="Monter">
+                                <i class="feather icon-chevron-up"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-secondary" 
+                                    (click)="moveColumnDown(column)" 
+                                    [disabled]="isLastVisibleColumn(column)"
+                                    title="Descendre">
+                                <i class="feather icon-chevron-down"></i>
+                            </button>
+                        </div>
+                        <div class="drag-handle" cdkDragHandle>
+                            <i class="feather icon-move"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="d-flex justify-content-between">
+            <button type="button" class="btn btn-outline-secondary" (click)="resetColumnsToDefault()">
+                Réinitialiser
+            </button>
+            <div>
+                <button type="button" class="btn btn-outline-primary me-2" (click)="selectAllColumns()">
+                    Tout sélectionner
+                </button>
+                <button type="button" class="btn btn-outline-warning" (click)="deselectAllColumns()">
+                    Tout désélectionner
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.close()">Annuler</button>
+        <button type="button" class="btn btn-primary" (click)="saveColumnConfiguration(modal)">Enregistrer</button>
+    </div>
+</ng-template>
