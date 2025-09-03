@@ -16,6 +16,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { PaysModule } from '../pays/pays.module';
 import {MatSelectModule} from '@angular/material/select';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import { MatSortModule } from '@angular/material/sort';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [
@@ -36,7 +38,9 @@ import {MatFormFieldModule} from '@angular/material/form-field';
     MatIconModule,
     MatButtonModule,
     NgSelectModule,
-    PaysModule
+    PaysModule,
+    MatSortModule,
+    DragDropModule
   ]
 })
 export class AgentModule { }

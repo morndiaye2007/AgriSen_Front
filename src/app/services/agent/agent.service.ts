@@ -124,6 +124,9 @@ symbole: any;
       if(req?.telephone){
         parametres = parametres.append("telephone", req.telephone);
       }  
+      if (req?.sort) {
+        parametres = parametres.append('sort', req.sort);
+      }
 
       const url = `${environment.baseUrl}agents/all?page=${req?.page}&size=${req?.size}`;
       console.log('🔍 URL de requête:', url);
