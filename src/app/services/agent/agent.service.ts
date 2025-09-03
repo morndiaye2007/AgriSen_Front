@@ -338,4 +338,10 @@ getOperateursComparaison(): Observable<any> {
     return this.http.get<any>(`${environment.baseUrl}agents/all`);
   }
 
+  importAgents(agents: any[]): Observable<any> {
+    return this.http.post(`${environment.baseUrl}/import`, agents);
+  }
+
+
+
 }

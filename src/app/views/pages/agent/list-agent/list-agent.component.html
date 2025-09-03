@@ -24,6 +24,38 @@
         <button type="button" class="btn btn-info btn-icon me-2" (click)="openColumnConfig()" title="Configurer les colonnes">
             <i class="feather icon-settings"></i>
         </button>
+        <span class="input-group-text" (click)="exportData()" style="cursor: pointer;">
+    <mat-icon color="primary">file_upload</mat-icon>
+  </span>
+
+        <!-- Icône Import qui déclenche l'input -->
+        <span class="input-group-text" style="cursor: pointer;" (click)="fileInput.click()">
+  <mat-icon color="accent">file_download</mat-icon>
+</span>
+
+        <!-- Input caché -->
+        <input
+                type="file"
+                #fileInput
+                class="d-none"
+                (change)="onFileSelected($event)"
+                accept=".pdf,.doc,.docx,image/*">
+
+        <!-- Aperçu -->
+        <div *ngIf="filePreview && isImage" class="mt-2">
+            <img [src]="filePreview" alt="Aperçu" class="img-thumbnail" style="max-height: 100px;">
+        </div>
+
+        <div *ngIf="filePreview && !isImage" class="mt-2">
+            <i class="fas fa-file-pdf fa-3x text-danger" *ngIf="isPdf"></i>
+            <i class="fas fa-file-word fa-3x text-primary" *ngIf="isDoc"></i>
+            <p class="mt-1">{{selectedFileName}}</p>
+        </div>
+
+
+
+
+
         <button type="button" class="btn btn-secondary btn-icon me-2" (click)="openAddAgent(SearchAgentModal)">
             <i class="feather icon-search"></i>
         </button>

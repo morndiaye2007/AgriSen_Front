@@ -13,6 +13,11 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 })
 export class ListAgentComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
+  filePreview: string | null = null;
+  selectedFileName: string = '';
+  isImage: boolean = false;
+  isPdf: boolean = false;
+  isDoc: boolean = false;
   displayedColumns: string[] = [
     'nomComplet',
     'matricule',
@@ -49,13 +54,13 @@ export class ListAgentComponent implements OnInit, AfterViewInit {
     { key: 'telephone', label: 'Téléphone', visible: true, order: 12 },
     { key: 'actions', label: 'Actions', visible: true, order: 13, fixed: true }
   ];
-  
+
   agentToUpdate: any;
   pageOptions: any = { page: 0, size: 10 };
   agents: any;
   dataSource: any = []; //  Initialisation avec un tableau vide
   loadingIndicator = true;
-  
+
   data: any;
 
   constructor(
@@ -103,15 +108,15 @@ export class ListAgentComponent implements OnInit, AfterViewInit {
 
   getAllAgents() {
     console.log('🔍 Paramètres de pagination:', this.pageOptions);
-    
+
     this.loadingIndicator = true; //  S'assurer que le loading est activé
-    
+
     this.agentServices.getAllAgents(this.pageOptions).subscribe({
       next: response => {
         console.log(' Response reçue:', response);
         console.log(' Type de response:', typeof response);
         console.log(' Est-ce un tableau?', Array.isArray(response));
-        
+
         //  Gestion flexible de la structure des données
         if (response) {
           // Si c'est une réponse avec payload (votre API)
@@ -143,10 +148,10 @@ export class ListAgentComponent implements OnInit, AfterViewInit {
           this.dataSource = [];
           console.warn(' Réponse vide ou nulle');
         }
-        
+
         console.log(' DataSource final:', this.dataSource);
         console.log(' Nombre d\'agents:', this.dataSource?.length || 0);
-        
+
         this.loadingIndicator = false;
       },
       error: err => {
@@ -156,10 +161,10 @@ export class ListAgentComponent implements OnInit, AfterViewInit {
           message: err.message,
           url: err.url
         });
-        
+
         this.dataSource = [];
         this.loadingIndicator = false;
-        
+
         //  Afficher une alerte d'erreur
         Alertes.alerteAddDanger('Erreur lors du chargement des agents');
       },
@@ -172,7 +177,7 @@ export class ListAgentComponent implements OnInit, AfterViewInit {
 
   paginate($event: any) {
     console.log(' Pagination demandée:', $event);
-    
+
     //  Validation de l'événement de pagination
     if ($event && typeof $event === 'number' && $event > 0) {
       this.loadingIndicator = true;
@@ -198,7 +203,7 @@ export class ListAgentComponent implements OnInit, AfterViewInit {
       console.warn(' Aucun agent sélectionné pour suppression');
       return;
     }
-    
+
     Alertes.confirmAction("Voulez-vous supprimer ?", "Cet agent sera supprimé", () => {
       this.deleteAgent(agent);
     });
@@ -213,7 +218,7 @@ export class ListAgentComponent implements OnInit, AfterViewInit {
   }
 
   deleteAgent(agent: any) {
-    Alertes.confirmAction( 
+    Alertes.confirmAction(
       'Voulez-vous supprimer ?',
       'Cet élément sera définitivement supprimé',
       () => {
@@ -241,11 +246,11 @@ export class ListAgentComponent implements OnInit, AfterViewInit {
 
   doSearch(data: any) {
     console.log(' Recherche avec filtres:', data);
-    
+
     this.pageOptions = { ...data }; //  Copie de l'objet au lieu d'assignation directe
     this.pageOptions.page = 0;
     this.pageOptions.size = 20;
-    
+
     console.log(" Paramètres de filtrage:", this.pageOptions);
     this.getAllAgents();
     this.modalService.dismissAll();
@@ -326,7 +331,7 @@ export class ListAgentComponent implements OnInit, AfterViewInit {
   dropColumn(event: CdkDragDrop<any[]>) {
     const visibleColumns = this.getVisibleColumnConfig();
     moveItemInArray(visibleColumns, event.previousIndex, event.currentIndex);
-    
+
     // Réorganiser les ordres
     visibleColumns.forEach((col, index) => {
       col.order = index;
@@ -353,7 +358,6 @@ export class ListAgentComponent implements OnInit, AfterViewInit {
   }
 
   saveColumnConfiguration(modal: any) {
-    // Sauvegarder la configuration dans le localStorage
     const config = {
       columns: this.availableColumns.map(col => ({
         key: col.key,
@@ -395,5 +399,72 @@ export class ListAgentComponent implements OnInit, AfterViewInit {
       return preferencesDescription.slice(0, -2)
     }else{return ''}
   }
+
+  onFileSelected(event: any) {
+    const file: File = event.target.files[0];
+    if (!file) return;
+
+    this.selectedFileName = file.name;
+    const fileType = file.type;
+
+    this.isImage = fileType.startsWith('image/');
+    this.isPdf = fileType === 'application/pdf';
+    this.isDoc = fileType.includes('word') || fileType.includes('msword');
+
+    if (this.isImage) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.filePreview = reader.result as string;
+      };
+      reader.readAsDataURL(file);
+    } else {
+      this.filePreview = 'ok'; // juste pour afficher l’icône
+    }
+  }
+
+  exportData() {
+    if (!this.dataSource || !Array.isArray(this.dataSource?.payload)) {
+      Alertes.alerteAddDanger('Aucune donnée à exporter');
+      return;
+    }
+
+    const agents = this.dataSource.payload;
+
+    // Construire l'en-tête CSV
+    const headers = this.getVisibleColumns().filter(col => col !== 'actions'); // exclure actions
+    const csvRows = [
+      headers.join(','), // Ligne d'entête
+      ...agents.map((agent: any) =>
+          headers.map(col => {
+            let val = agent[col];
+
+            // Transformer les objets et tableaux en texte lisible
+            if (col === 'preferences') {
+              val = this.getPreferences(agent[col]); // méthode que tu as déjà
+            } else if (typeof val === 'object' && val !== null) {
+              val = JSON.stringify(val); // convertir objets (pays, filiere…) en JSON
+            } else if (val === null || val === undefined) {
+              val = '';
+            }
+
+            return `"${val}"`; // protéger avec des guillemets
+          }).join(',')
+      )
+    ];
+
+    const csvContent = csvRows.join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'agents_export.csv'); // mieux en .csv
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+
+  printAgents(){}
 
 }
