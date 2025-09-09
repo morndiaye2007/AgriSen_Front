@@ -15,3 +15,52 @@
 .page-item.disabled .page-link {
   cursor: not-allowed;
 }
+.export-group {
+  select.form-select {
+    max-width: 120px;
+  }
+
+  button.btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+/* Style pour le tableau Material */
+table.mat-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Fond jaune pour les en-têtes */
+th.mat-header-cell {
+  background-color: #ffc107; /* Jaune vif, peut être ajusté (ex: #ffeb3b pour un jaune plus clair) */
+  color: #000; /* Texte en noir pour la lisibilité */
+  font-weight: bold;
+  padding: 8px;
+  text-align: left;
+  border-bottom: 2px solid #ddd; /* Bordure pour délimiter l'en-tête */
+}
+
+/* Style pour les cellules de données */
+td.mat-cell {
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Ombre pour le tableau */
+.mat-elevation-z8 {
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
+}
+
+/* Amélioration de l'ergonomie : survol des lignes */
+tr.mat-row:hover {
+  background-color: #f5f5f5; /* Gris clair au survol pour une meilleure interaction */
+}
+
+/* Style pour les colonnes fixes (ex: actions) */
+th.mat-header-cell[matColumnDef="actions"],
+td.mat-cell[matColumnDef="actions"] {
+  text-align: center;
+  min-width: 100px; /* Largeur minimale pour la colonne actions */
+}

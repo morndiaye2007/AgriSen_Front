@@ -251,20 +251,28 @@ goToFilierePage(page: number): void {
     });
   }
 
-   paginate($event: any) {
-    console.log(' Pagination demandée:', $event);
-    
-    //  Validation de l'événement de pagination
+
+  paginate($event: any) {
     if ($event && typeof $event === 'number' && $event > 0) {
       this.loadingIndicator = true;
       this.pageOptions.page = $event - 1;
-      this.agentService.getAllFilere();
-    } else {
-      console.warn(' Événement de pagination invalide:', $event);
+
+      this.agentService.getAllPays(this.pageOptions).subscribe({
+        next: (data) => {
+          this.listePays = data.payload?.content || data.content || data;
+          this.paysTotalItems = data.payload?.totalElements || data.totalElements || data.length;
+          this.loadingIndicator = false;
+        },
+        error: () => {
+          this.loadingIndicator = false;
+          Alertes.alerteAddDanger('Erreur de pagination pays');
+        }
+      });
     }
   }
 
-  
+
+
 
   // Méthode utilitaire pour générer les numéros de page
   // getPages(totalItems: number, pageSize: number, currentPage: number): number[] {
@@ -358,7 +366,7 @@ goToFilierePage(page: number): void {
       req.libelle = this.paysLibelleQuery.trim();
     }
     
-    this.agentService.getAllPaysPaginated(req).subscribe({
+    this.agentService.getAllPays(req).subscribe({
       next: (response) => {
         console.log('Réponse pays paginés:', response);
         
