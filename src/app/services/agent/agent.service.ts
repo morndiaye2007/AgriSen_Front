@@ -334,14 +334,20 @@ getFiliereById(id: number): Observable<any> {
       );
     }
   }
-getOperateursComparaison(): Observable<any> {
+   getOperateursComparaison(): Observable<any> {
     return this.http.get<any>(`${environment.baseUrl}agents/all`);
   }
 
-  importAgents(agents: any[]): Observable<any> {
-    return this.http.post(`${environment.baseUrl}/import`, agents);
-  }
+    exportAgents(): Observable<Blob> {
+        return this.http.get(`${environment.baseUrl}agents/export`, {
+            responseType: 'blob'
+        });
+    }
 
+    // Import agents
+    importAgents(agents: any[]): Observable<any> {
+        return this.http.post(`${environment.baseUrl}agents/import`, agents);
+    }
 
 
 }

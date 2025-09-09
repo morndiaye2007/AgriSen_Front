@@ -1,5 +1,4 @@
 <div class="d-flex justify-content-between align-items-center flex-wrap grid-margin mb-1">
-
     <!-- Breadcrumb à gauche -->
     <nav class="page-breadcrumb cursor-pointer">
         <ol class="breadcrumb mb-0">
@@ -9,52 +8,80 @@
 
     <!-- Boutons à droite -->
     <div class="d-flex justify-content-end align-items-center gap-2">
-        <!-- Sélecteur d'éléments par page -->
-        <div class="d-flex align-items-center me-3">
-            <label class="form-label me-2 mb-0">Éléments par page:</label>
-            <select class="form-select form-select-sm" style="width: auto;" 
-                    [(ngModel)]="pageOptions.size" (change)="onPageSizeChange()">
-                <option value="5">5</option>
-                <option value="10">10</option>
-                <option value="20">20</option>
-                <option value="50">50</option>
-                <option value="100">100</option>
-            </select>
-        </div>
-        <button type="button" class="btn btn-info btn-icon me-2" (click)="openColumnConfig()" title="Configurer les colonnes">
+        <button type="button" class="btn btn-info btn-icon" (click)="openColumnConfig()" title="Configurer les colonnes">
             <i class="feather icon-settings"></i>
         </button>
-        <span class="input-group-text" (click)="exportData()" style="cursor: pointer;">
-    <mat-icon color="primary">file_upload</mat-icon>
-  </span>
+        <!-- Bouton icône qui ouvre le menu -->
+        <span [matMenuTriggerFor]="exportMenu"
+              style="cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
+             width: 40px; height: 40px; background-color: #0d6efd; border-radius: 4px; color: white;">
+            <mat-icon style="transform: rotate(180deg);">file_download</mat-icon>
+        </span>
 
-        <!-- Icône Import qui déclenche l'input -->
-        <span class="input-group-text" style="cursor: pointer;" (click)="fileInput.click()">
-  <mat-icon color="accent">file_download</mat-icon>
-</span>
+        <!-- Menu qui s'ouvre au-dessus -->
+        <mat-menu #exportMenu="matMenu" yPosition="above">
+            <button mat-menu-item (click)="exportData('excel')">Excel/CSV</button>
+            <button mat-menu-item (click)="exportData('pdf')">PDF</button>
+        </mat-menu>
+
+        <span class="input-group-text bg-warning text-dark" style="cursor: pointer;" (click)="openModal(content)">
+            <mat-icon class="me-1">file_download</mat-icon>
+        </span>
+
+        <ng-template #content let-modal>
+
+
+            <div class="modal-header">
+                <h5 class="modal-title">Importation</h5>
+                <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="mb-3">
+                    <div class="input-group flex-wrap">
+                        <button class="btn btn-primary d-flex align-items-center mb-2 mb-md-0" type="button" (click)="downloadTemplate()">
+                            <mat-icon class="me-1">file_download</mat-icon>
+                            <span class="d-none d-md-inline">Télécharger Un Modèle</span>
+                        </button>
+                        <input type="text" class="form-control mt-2 mt-md-0" [value]="downloadFileName" placeholder="Aucun fichier choisi" readonly>
+                    </div>
+                    <div *ngIf="filePreview && isExcel" class="mt-3 text-center">
+                        <i class="fas fa-file-excel fa-3x text-success"></i>
+                        <p class="mt-2 fw-bold text-truncate" style="max-width: 100%;">
+                            {{ downloadFileName }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <div class="input-group flex-wrap">
+                        <button class="btn btn-warning d-flex align-items-center mb-2 mb-md-0" type="button" (click)="fileInput.click()">
+                            <mat-icon class="me-1">file_download</mat-icon>
+                            <span class="d-none d-md-inline">Importer</span>
+                        </button>
+                        <input type="text" class="form-control mt-2 mt-md-0" [value]="selectedFileName" placeholder="Aucun fichier choisi" readonly>
+                    </div>
+                    <div *ngIf="filePreview && isExcel" class="mt-3 text-center">
+                        <i class="fas fa-file-excel fa-3x text-success"></i>
+                        <p class="mt-2 fw-bold text-truncate" style="max-width: 100%;">
+                            {{ selectedFileName }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" (click)="modal.close()">Annuler</button>
+                <button class="btn btn-primary" (click)="importFile()">Importer</button>
+            </div>
+        </ng-template>
 
         <!-- Input caché -->
-        <input
-                type="file"
-                #fileInput
-                class="d-none"
-                (change)="onFileSelected($event)"
-                accept=".pdf,.doc,.docx,image/*">
-
-        <!-- Aperçu -->
-        <div *ngIf="filePreview && isImage" class="mt-2">
-            <img [src]="filePreview" alt="Aperçu" class="img-thumbnail" style="max-height: 100px;">
-        </div>
-
-        <div *ngIf="filePreview && !isImage" class="mt-2">
-            <i class="fas fa-file-pdf fa-3x text-danger" *ngIf="isPdf"></i>
-            <i class="fas fa-file-word fa-3x text-primary" *ngIf="isDoc"></i>
-            <p class="mt-1">{{selectedFileName}}</p>
-        </div>
-
-
-
-
+        <input type="file" #fileInput class="d-none" (change)="onFileSelected($event)" accept=".xlsx,.xls,.csv">
 
         <button type="button" class="btn btn-secondary btn-icon me-2" (click)="openAddAgent(SearchAgentModal)">
             <i class="feather icon-search"></i>
@@ -63,104 +90,66 @@
             <i class="feather icon-plus-circle"></i>&nbsp;&nbsp; Nouvel agent
         </button>
     </div>
-
 </div>
 
 <div class="card mt-4">
     <div class="card-body p-0">
         <section class="table-container mat-elevation-z8" tabindex="0">
-            <!-- <app-spinner *ngIf="loadingIndicator" [displayedColumns]="displayedColumns"></app-spinner> -->
-
             <table mat-table [dataSource]="dataSource?.payload" matSort>
                 <ng-container matColumnDef="nomComplet">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-head-text" style="min-width:100px;">Nom Complet</th>
                     <td mat-cell *matCellDef="let agent" class="text-left"> {{agent?.nomComplet}} </td>
                 </ng-container>
-
-    
                 <ng-container matColumnDef="matricule">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-head-text text-center" style="min-width:50px;">
-                        Matricule </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-head-text text-center" style="min-width:50px;">Matricule</th>
                     <td mat-cell *matCellDef="let agent" class="text-center"> {{agent?.matricule}} </td>
                 </ng-container>
-
-                <!-- <ng-container matColumnDef="motdepasse">
-                    <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:50px;">
-                       Mot de passe </th>
-                    <td mat-cell *matCellDef="let agent" class="text-center"> {{agent?.motdepasse}} </td> -->
-                    <!-- <td mat-cell *matCellDef="let agent" class="text-center">******** </td> -->
-                <!-- </ng-container> -->
-                
                 <ng-container matColumnDef="email">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-head-text text-center" style="min-width:50px;">
-                       Courriel </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-head-text text-center" style="min-width:50px;">Courriel</th>
                     <td mat-cell *matCellDef="let agent" class="text-center"> {{agent?.email}} </td>
                 </ng-container>
-                 
                 <ng-container matColumnDef="description">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-head-text text-center" style="min-width:50px;">
-                       Description </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-head-text text-center" style="min-width:50px;">Description</th>
                     <td mat-cell *matCellDef="let agent" class="text-center"> {{agent?.description}} </td>
                 </ng-container>
-
                 <ng-container matColumnDef="age">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-head-text text-center" style="min-width:50px;">
-                       Âge </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-head-text text-center" style="min-width:50px;">Âge</th>
                     <td mat-cell *matCellDef="let agent" class="text-center"> {{agent?.age}} </td>
                 </ng-container>
-
                 <ng-container matColumnDef="dateNaissance">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-head-text text-center" style="min-width:50px;">
-                       Date de naissance</th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-head-text text-center" style="min-width:50px;">Date de naissance</th>
                     <td mat-cell *matCellDef="let agent" class="text-center"> {{agent?.dateNaissance}} </td>
                 </ng-container>
-
                 <ng-container matColumnDef="heure">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-head-text text-center" style="min-width:50px;">
-                       Heure</th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-head-text text-center" style="min-width:50px;">Heure</th>
                     <td mat-cell *matCellDef="let agent" class="text-center"> {{agent?.heure}} </td>
                 </ng-container>
-
-                
-                <ng-container matColumnDef="sexe"> 
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-head-text text-center" style="min-width:50px;">
-                        Sexe </th>
+                <ng-container matColumnDef="sexe">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-head-text text-center" style="min-width:50px;">Sexe</th>
                     <td mat-cell *matCellDef="let agent" class="text-center"> {{agent?.sexe?.description}} </td>
                 </ng-container>
-               
-                <ng-container matColumnDef="preferences"> 
-                    <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:50px;">
-                        Préférence(s) </th>
+                <ng-container matColumnDef="preferences">
+                    <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:50px;">Préférence(s)</th>
                     <td mat-cell *matCellDef="let agent" class="text-center"> {{getPreferences(agent?.preferences)}} </td>
                 </ng-container>
-
-                 <ng-container matColumnDef="pays"> 
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-head-text text-center" style="min-width:50px;">
-                        Pays de résidence </th>
+                <ng-container matColumnDef="pays">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-head-text text-center" style="min-width:50px;">Pays de résidence</th>
                     <td mat-cell *matCellDef="let agent" class="text-center"> {{agent?.pays?.libelle}} </td>
                 </ng-container>
-
-                  <ng-container matColumnDef="filiere"> 
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-head-text text-center" style="min-width:50px;">
-                        Filière </th>
+                <ng-container matColumnDef="filiere">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-head-text text-center" style="min-width:50px;">Filière</th>
                     <td mat-cell *matCellDef="let agent" class="text-center"> {{agent?.filiere?.libelle}} </td>
                 </ng-container>
-
                 <ng-container matColumnDef="telephone">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-head-text text-center" style="min-width:50px;">
-                       Téléphone </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-head-text text-center" style="min-width:50px;">Téléphone</th>
                     <td mat-cell *matCellDef="let agent" class="text-center"> {{agent?.telephone}} </td>
                 </ng-container>
-
-                 <ng-container matColumnDef="notes">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-head-text text-center" style="min-width:50px;">
-                       Notes </th>
+                <ng-container matColumnDef="notes">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-head-text text-center" style="min-width:50px;">Notes</th>
                     <td mat-cell *matCellDef="let agent" class="text-center"> {{agent?.notes}} </td>
                 </ng-container>
-                     
                 <ng-container matColumnDef="actions" stickyEnd>
-                    <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:0px;">
-                        Actions </th>
+                    <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:0px;">Actions</th>
                     <td mat-cell *matCellDef="let agent">
                         <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
                             <mat-icon>more_vert</mat-icon>
@@ -182,33 +171,47 @@
                 <tr mat-row *matRowDef="let emprow; columns: getVisibleColumns()"></tr>
             </table>
 
-            <span *ngIf="dataSource?.payload?.length == 0" class="paginate text-danger mt-4">Les critères de recherche
-                tels qu'énoncés ne correspondent à aucun agent</span>
+            <span *ngIf="dataSource?.payload?.length == 0" class="paginate text-danger mt-4">
+                Les critères de recherche tels qu'énoncés ne correspondent à aucun agent
+            </span>
 
-            <div class="paginate">
+            <!-- Pagination and page size selector centered -->
+            <div class="d-flex justify-content-center align-items-center paginate mt-4">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="d-flex align-items-center me-3">
+                        <label class="form-label me-2 mb-0">Éléments par page:</label>
+                        <select class="form-select form-select-sm" style="width: auto;"
+                                [(ngModel)]="pageOptions.size" (change)="onPageSizeChange()">
+                            <option value="2">2</option>
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                    </div>
+
+                </div>
                 <ngb-pagination [collectionSize]="dataSource?.metadata?.totalElements" [page]="pageOptions.page+1"
-                    [pageSize]="pageOptions.size" [maxSize]="5" (pageChange)="paginate($event)" size="sm"
-                    [rotate]="true" [ellipses]="true" [boundaryLinks]="true">
+                                [pageSize]="pageOptions.size" [maxSize]="5" (pageChange)="paginate($event)" size="sm"
+                                [rotate]="true" [ellipses]="true" [boundaryLinks]="true">
                 </ngb-pagination>
             </div>
         </section>
     </div>
 </div>
 
-
-<!-- search agent -->
+<!-- Modals unchanged -->
 <ng-template #SearchAgentModal let-modal>
     <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Recherche Agent</h5>
-        <button type="button" class="btn-close"  (click)="modal.close('by: close icon')" aria-label="Close"></button>
+        <button type="button" class="btn-close" (click)="modal.close('by: close icon')" aria-label="Close"></button>
     </div>
     <div class="modal-body">
         <app-add-agent (search)="doSearch($event)" [isSearch]="true" (submit)="close()"></app-add-agent>
     </div>
 </ng-template>
-<!-- search agent -->
 
-<!--Add agent-->
 <ng-template #addAgentModal let-modal>
     <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Ajout Agent</h5>
@@ -218,21 +221,17 @@
         <app-add-agent [isSearch]="false" (submit)="close()"></app-add-agent>
     </div>
 </ng-template>
-<!--End Add agent-->
 
-<!--Edit agent-->
 <ng-template #EditAgentModal let-modal>
     <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Modifier Agent</h5>
         <button type="button" class="btn-close" (click)="modal.close('by: close icon')" aria-label="Close"></button>
     </div>
     <div class="modal-body">
-        <app-edit-agent  (submit)="close()" [agentToUpdate]="agentToUpdate"></app-edit-agent>
-    </div> 
+        <app-edit-agent (submit)="close()" [agentToUpdate]="agentToUpdate"></app-edit-agent>
+    </div>
 </ng-template>
-<!--End Edit agent-->
 
-<!-- Modal de configuration des colonnes -->
 <ng-template #columnConfigModal let-modal>
     <div class="modal-header">
         <h5 class="modal-title">Configuration des colonnes</h5>
@@ -243,10 +242,10 @@
             <div class="col-md-6">
                 <h6>Colonnes disponibles</h6>
                 <div class="list-group" style="max-height: 400px; overflow-y: auto;">
-                    <div *ngFor="let column of availableColumns; trackBy: trackByColumn" 
+                    <div *ngFor="let column of availableColumns; trackBy: trackByColumn"
                          class="list-group-item d-flex justify-content-between align-items-center">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" 
+                            <input class="form-check-input" type="checkbox"
                                    [id]="'col-' + column.key"
                                    [checked]="column.visible"
                                    (change)="toggleColumnVisibility(column)">
@@ -260,19 +259,19 @@
             <div class="col-md-6">
                 <h6>Ordre des colonnes visibles</h6>
                 <div class="list-group" cdkDropList (cdkDropListDropped)="dropColumn($event)" style="max-height: 400px; overflow-y: auto;">
-                    <div *ngFor="let column of getVisibleColumnConfig(); trackBy: trackByColumn" 
-                         class="list-group-item d-flex justify-content-between align-items-center" 
+                    <div *ngFor="let column of getVisibleColumnConfig(); trackBy: trackByColumn"
+                         class="list-group-item d-flex justify-content-between align-items-center"
                          cdkDrag>
                         <span>{{ column.label }}</span>
                         <div>
-                            <button class="btn btn-sm btn-outline-secondary me-1" 
-                                    (click)="moveColumnUp(column)" 
+                            <button class="btn btn-sm btn-outline-secondary me-1"
+                                    (click)="moveColumnUp(column)"
                                     [disabled]="isFirstVisibleColumn(column)"
                                     title="Monter">
                                 <i class="feather icon-chevron-up"></i>
                             </button>
-                            <button class="btn btn-sm btn-outline-secondary" 
-                                    (click)="moveColumnDown(column)" 
+                            <button class="btn btn-sm btn-outline-secondary"
+                                    (click)="moveColumnDown(column)"
                                     [disabled]="isLastVisibleColumn(column)"
                                     title="Descendre">
                                 <i class="feather icon-chevron-down"></i>
