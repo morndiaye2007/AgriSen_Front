@@ -1,0 +1,87 @@
+<div class="profil-container">
+  <h1>Mon Profil</h1>
+  
+  <div class="row">
+    <div class="col-md-4">
+      <mat-card>
+        <mat-card-content class="text-center">
+          <div class="profile-picture-container">
+            <img [src]="profilePicture || 'assets/images/placeholder.jpg'" alt="Photo de profil" class="profile-picture">
+            <button mat-icon-button class="edit-picture-btn" (click)="fileInput.click()">
+              <mat-icon>camera_alt</mat-icon>
+            </button>
+            <input #fileInput type="file" accept="image/*" (change)="onFileSelected($event)" style="display: none;">
+          </div>
+          <h2>{{ currentUser?.firstName }} {{ currentUser?.lastName }}</h2>
+          <p class="text-muted">{{ currentUser?.role }}</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-md-8">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Informations Personnelles</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <form [formGroup]="profilForm" (ngSubmit)="updateProfil()">
+            <div class="row">
+              <div class="col-md-6">
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Prénom</mat-label>
+                  <input matInput formControlName="firstName">
+                </mat-form-field>
+              </div>
+              <div class="col-md-6">
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Nom</mat-label>
+                  <input matInput formControlName="lastName">
+                </mat-form-field>
+              </div>
+            </div>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Email</mat-label>
+              <input matInput type="email" formControlName="email">
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Téléphone</mat-label>
+              <input matInput formControlName="phone">
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Région</mat-label>
+              <input matInput formControlName="region">
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Nom de l'exploitation</mat-label>
+              <input matInput formControlName="farmName">
+            </mat-form-field>
+            <button mat-raised-button color="primary" type="submit">Enregistrer</button>
+          </form>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="mt-4">
+        <mat-card-header>
+          <mat-card-title>Changer le Mot de Passe</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Mot de passe actuel</mat-label>
+              <input matInput type="password" formControlName="currentPassword">
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Nouveau mot de passe</mat-label>
+              <input matInput type="password" formControlName="newPassword">
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Confirmer le mot de passe</mat-label>
+              <input matInput type="password" formControlName="confirmPassword">
+            </mat-form-field>
+            <button mat-raised-button color="primary" type="submit">Changer le mot de passe</button>
+          </form>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
+

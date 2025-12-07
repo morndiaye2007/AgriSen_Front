@@ -1,0 +1,38 @@
+<div class="financement-container">
+  <h1>Demande de Financement</h1>
+  <mat-card>
+    <mat-card-content>
+      <form [formGroup]="financementForm" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Montant (XOF)</mat-label>
+          <input matInput type="number" formControlName="montant">
+          <mat-slider formControlName="montant" min="100000" max="10000000" step="100000"></mat-slider>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Durée (mois)</mat-label>
+          <input matInput type="number" formControlName="duree">
+          <mat-slider formControlName="duree" min="6" max="60" step="1"></mat-slider>
+        </mat-form-field>
+
+        <div *ngIf="mensualite > 0" class="simulation">
+          <h3>Simulation</h3>
+          <p>Mensualité estimée: {{ mensualite | number }} XOF</p>
+        </div>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Motif</mat-label>
+          <input matInput formControlName="motif">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Description</mat-label>
+          <textarea matInput formControlName="description" rows="4"></textarea>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" type="submit">Soumettre</button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
+

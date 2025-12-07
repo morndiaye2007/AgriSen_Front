@@ -1,0 +1,42 @@
+<div class="journal-container">
+  <div class="header-section">
+    <h1>Journal de Culture</h1>
+    <button mat-raised-button color="primary" (click)="addActivite()">
+      <mat-icon>add</mat-icon>
+      Nouvelle Activité
+    </button>
+  </div>
+
+  <mat-card>
+    <mat-card-content>
+      <mat-form-field appearance="outline">
+        <mat-label>Filtrer par type</mat-label>
+        <mat-select [(value)]="selectedType" (selectionChange)="filterByType()">
+          <mat-option *ngFor="let type of typesActivite" [value]="type.value">
+            {{ type.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-accordion>
+        <mat-expansion-panel *ngFor="let activite of filteredActivites">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              {{ activite.type }} - {{ activite.date | date:'short' }}
+            </mat-panel-title>
+            <mat-panel-description>
+              Parcelle {{ activite.parcelleId }}
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <div>
+            <p><strong>Description:</strong> {{ activite.description }}</p>
+            <p *ngIf="activite.cout"><strong>Coût:</strong> {{ activite.cout | number }} XOF</p>
+            <p *ngIf="activite.quantite"><strong>Quantité:</strong> {{ activite.quantite }} {{ activite.unite }}</p>
+            <p *ngIf="activite.observations"><strong>Observations:</strong> {{ activite.observations }}</p>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </mat-card-content>
+  </mat-card>
+</div>
+

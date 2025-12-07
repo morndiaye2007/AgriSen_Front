@@ -1,0 +1,89 @@
+<div class="parcelles-container">
+  <div class="header-section">
+    <h1>Gestion des Parcelles</h1>
+    <button mat-raised-button color="primary" (click)="addParcelle()">
+      <mat-icon>add</mat-icon>
+      Nouvelle Parcelle
+    </button>
+  </div>
+
+  <mat-card>
+    <mat-card-content>
+      <div class="filters-section">
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Rechercher</mat-label>
+          <input matInput (keyup)="applyFilter($event)" placeholder="Rechercher par nom, culture...">
+          <mat-icon matPrefix>search</mat-icon>
+        </mat-form-field>
+
+        <div class="filter-buttons">
+          <button mat-button [class.active]="selectedFilter === 'toutes'" (click)="filterByCulture('toutes')">
+            Toutes ({{ dataSource.data.length }})
+          </button>
+          <button mat-button [class.active]="selectedFilter === 'mil'" (click)="filterByCulture('mil')">
+            Mil
+          </button>
+          <button mat-button [class.active]="selectedFilter === 'sorgho'" (click)="filterByCulture('sorgho')">
+            Sorgho
+          </button>
+          <button mat-button [class.active]="selectedFilter === 'arachides'" (click)="filterByCulture('arachides')">
+            Arachides
+          </button>
+          <button mat-button [class.active]="selectedFilter === 'niébé'" (click)="filterByCulture('niébé')">
+            Niébé
+          </button>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z0">
+          <ng-container matColumnDef="nom">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Nom</th>
+            <td mat-cell *matCellDef="let parcelle">{{ parcelle.nom }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="taille">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Taille</th>
+            <td mat-cell *matCellDef="let parcelle">{{ parcelle.taille }} Hectares</td>
+          </ng-container>
+
+          <ng-container matColumnDef="region">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Région</th>
+            <td mat-cell *matCellDef="let parcelle">{{ parcelle.region }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="cultureActuelle">
+            <th mat-header-cell *matHeaderCellDef>Culture Actuelle</th>
+            <td mat-cell *matCellDef="let parcelle">
+              <mat-chip *ngIf="parcelle.cultureActuelle">
+                {{ parcelle.cultureActuelle.type }}
+              </mat-chip>
+              <span *ngIf="!parcelle.cultureActuelle" class="text-muted">Aucune</span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td mat-cell *matCellDef="let parcelle">
+              <button mat-icon-button color="primary" (click)="viewDetails(parcelle.id)" matTooltip="Voir détails">
+                <mat-icon>visibility</mat-icon>
+              </button>
+              <button mat-icon-button color="accent" (click)="editParcelle(parcelle.id)" matTooltip="Modifier">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="deleteParcelle(parcelle.id)" matTooltip="Supprimer">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <mat-paginator [pageSizeOptions]="[5, 10, 20, 50]" showFirstLastButtons></mat-paginator>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
+

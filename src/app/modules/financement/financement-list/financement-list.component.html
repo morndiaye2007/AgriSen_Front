@@ -1,0 +1,39 @@
+<div class="financement-list-container">
+  <div class="header-section">
+    <h1>Mes Demandes de Financement</h1>
+    <button mat-raised-button color="primary" routerLink="/dashboard/financement/new">
+      Nouvelle Demande
+    </button>
+  </div>
+
+  <mat-card>
+    <mat-card-content>
+      <div *ngIf="demandes.length === 0" class="text-center p-4">
+        <p>Aucune demande de financement pour le moment.</p>
+      </div>
+      <mat-list *ngIf="demandes.length > 0">
+        <mat-list-item *ngFor="let demande of demandes">
+          <div class="demande-item">
+            <div>
+              <h4>{{ demande.motif }}</h4>
+              <p>Montant: {{ demande.montant | number }} XOF - Durée: {{ demande.duree }} mois</p>
+              <p>Statut: 
+                <span [ngClass]="{
+                  'text-success': demande.statut === 'validee',
+                  'text-warning': demande.statut === 'en_attente',
+                  'text-danger': demande.statut === 'refusee'
+                }">
+                  {{ demande.statut }}
+                </span>
+              </p>
+            </div>
+            <div *ngIf="demande.mensualite">
+              <p><strong>Mensualité:</strong> {{ demande.mensualite | number }} XOF</p>
+            </div>
+          </div>
+        </mat-list-item>
+      </mat-list>
+    </mat-card-content>
+  </mat-card>
+</div>
+

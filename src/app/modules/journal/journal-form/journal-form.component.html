@@ -1,0 +1,81 @@
+<div class="journal-form-container">
+  <h1>Nouvelle Activité</h1>
+  <mat-card>
+    <mat-card-content>
+      <form [formGroup]="journalForm" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Parcelle</mat-label>
+          <mat-select formControlName="parcelleId">
+            <mat-option *ngFor="let parcelle of parcelles" [value]="parcelle.id">
+              {{ parcelle.nom }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Type d'activité</mat-label>
+          <mat-select formControlName="type">
+            <mat-option [value]="typesActivite[0]">Plantation</mat-option>
+            <mat-option [value]="typesActivite[1]">Irrigation</mat-option>
+            <mat-option [value]="typesActivite[2]">Fertilisation</mat-option>
+            <mat-option [value]="typesActivite[3]">Traitement</mat-option>
+            <mat-option [value]="typesActivite[4]">Récolte</mat-option>
+            <mat-option [value]="typesActivite[5]">Entretien</mat-option>
+            <mat-option [value]="typesActivite[6]">Autre</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Date</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="date">
+          <mat-datepicker-toggle matIconButton matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Description</mat-label>
+          <textarea matInput formControlName="description" rows="4" placeholder="Décrivez l'activité effectuée"></textarea>
+          <mat-error *ngIf="journalForm.get('description')?.hasError('required')">
+            Description requise
+          </mat-error>
+        </mat-form-field>
+
+        <div class="row">
+          <div class="col-md-6">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Coût (XOF)</mat-label>
+              <input matInput type="number" formControlName="cout" min="0">
+            </mat-form-field>
+          </div>
+          <div class="col-md-3">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Quantité</mat-label>
+              <input matInput type="number" formControlName="quantite" min="0">
+            </mat-form-field>
+          </div>
+          <div class="col-md-3">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Unité</mat-label>
+              <input matInput formControlName="unite" placeholder="kg, litres, etc.">
+            </mat-form-field>
+          </div>
+        </div>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Observations</mat-label>
+          <textarea matInput formControlName="observations" rows="3" placeholder="Observations supplémentaires (optionnel)"></textarea>
+        </mat-form-field>
+
+        <div class="form-actions">
+          <button mat-button type="button" routerLink="/dashboard/journal">
+            Annuler
+          </button>
+          <button mat-raised-button color="primary" type="submit">
+            Enregistrer
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
+

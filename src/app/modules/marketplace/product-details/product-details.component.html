@@ -1,0 +1,28 @@
+<div class="product-details-container">
+  <button mat-button (click)="router.navigate(['/dashboard/marketplace'])" class="back-button">
+    <mat-icon>arrow_back</mat-icon>
+    Retour
+  </button>
+
+  <mat-card *ngIf="produit">
+    <mat-card-header>
+      <mat-card-title>{{ produit.nom }}</mat-card-title>
+      <mat-card-subtitle>{{ produit.vendeurNom }} - {{ produit.region }}</mat-card-subtitle>
+    </mat-card-header>
+    <img mat-card-image [src]="produit.imageUrl" [alt]="produit.nom" *ngIf="produit.imageUrl">
+    <mat-card-content>
+      <p><strong>Description:</strong> {{ produit.description }}</p>
+      <p><strong>Prix:</strong> {{ produit.prix | number }} XOF / {{ produit.unite }}</p>
+      <p><strong>Quantité disponible:</strong> {{ produit.quantiteDisponible }} {{ produit.unite }}</p>
+      <p><strong>Catégorie:</strong> {{ produit.categorie }}</p>
+      <div *ngIf="produit.certifieBio" class="badge">
+        <mat-icon>eco</mat-icon>
+        <span>Biologique</span>
+      </div>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-raised-button color="primary">Commander</button>
+    </mat-card-actions>
+  </mat-card>
+</div>
+

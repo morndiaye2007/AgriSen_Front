@@ -1,0 +1,34 @@
+.financement-list-container {
+  padding: 0;
+}
+
+.header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  
+  h1 {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 600;
+  }
+}
+
+.demande-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 1rem 0;
+  
+  h4 {
+    margin: 0 0 0.5rem 0;
+  }
+  
+  p {
+    margin: 0.25rem 0;
+  }
+}
+
+

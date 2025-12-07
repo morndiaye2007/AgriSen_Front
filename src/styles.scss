@@ -1,39 +1,35 @@
 /* You can add global styles to this file, and also import other style files */
 
 
+// Bootstrap 5
+@import "bootstrap/dist/css/bootstrap.min.css";
+@import "bootstrap-icons/font/bootstrap-icons.css";
+
+// Angular Material
+@import "@angular/material/prebuilt-themes/indigo-pink.css";
+
+// Leaflet
+// @import 'ngx-toastr/toastr';
+// Toastr
+@import "ngx-toastr/toastr";
+
 // Global icon font
 @import "./assets/fonts/feather/style.css";
 
-
-// // 3rd party plugins
-@import "@mdi/font/css/materialdesignicons.min.css";
-@import "perfect-scrollbar/css/perfect-scrollbar.css";
-@import "highlight.js/styles/googlecode.css";
-@import "ngx-owl-carousel-o/lib/styles/prebuilt-themes/owl.carousel.min.css";
-@import "ngx-owl-carousel-o/lib/styles/prebuilt-themes/owl.theme.default.min.css";
-@import "animate.css/animate.min.css";
-@import "@ng-select/ng-select/themes/default.theme.css";
-@import "metismenujs/scss/metismenujs";
-@import "dropzone/dist/min/dropzone.min.css";
-@import "quill/dist/quill.snow.css";
-@import "angular-archwizard/styles/archwizard.css";
-@import "simple-datatables/dist/style.css";
-@import "@swimlane/ngx-datatable/index.css";
-@import "@swimlane/ngx-datatable/themes/bootstrap.css";
-@import "@swimlane/ngx-datatable/assets/icons.css";
-
-
 // NobleUI styles for LTR
-@import "./assets/scss/style";
+// @import "./assets/scss/style"; // Commenté temporairement pour éviter les conflits avec Bootstrap 5
 
-// Impot style for custom table
-@import "./assets/scss/custom-table.scss";
+// Import style for custom table
+// @import "./assets/scss/custom-table.scss"; // Commenté temporairement
 
-.modal-header {
-    background-color: $primary;
-    color: #ffff;
+// Global styles
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
-
-// NobleUI styles For RTL
-// @import "./assets/scss/style.rtl.css";
+.modal-header {
+    background-color: #4caf50;
+    color: #ffff;
+}

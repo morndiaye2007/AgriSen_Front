@@ -1,0 +1,119 @@
+<div class="dashboard-container">
+  <div class="welcome-section">
+    <h1>Bienvenue, Moussa</h1>
+    <p>Voici un aperçu de votre exploitation pour la campagne en cours.</p>
+  </div>
+
+  <!-- KPIs -->
+  <div class="row mb-4">
+    <div class="col-md-4 mb-3">
+      <mat-card class="kpi-card">
+        <mat-card-content>
+          <div class="kpi-content">
+            <div class="kpi-icon rendement">
+              <mat-icon>agriculture</mat-icon>
+            </div>
+            <div class="kpi-info">
+              <h3 class="kpi-value">{{ totalRendement }} Tonnes</h3>
+              <p class="kpi-label">Rendement Total</p>
+              <span class="kpi-change positive">+5.2% vs saison passée</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-md-4 mb-3">
+      <mat-card class="kpi-card">
+        <mat-card-content>
+          <div class="kpi-content">
+            <div class="kpi-icon revenu">
+              <mat-icon>attach_money</mat-icon>
+            </div>
+            <div class="kpi-info">
+              <h3 class="kpi-value">{{ revenuProjete | number }} XOF</h3>
+              <p class="kpi-label">Revenu Projeté</p>
+              <span class="kpi-change positive">+8.1% vs saison passée</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-md-4 mb-3">
+      <mat-card class="kpi-card">
+        <mat-card-content>
+          <div class="kpi-content">
+            <div class="kpi-icon sante">
+              <mat-icon>favorite</mat-icon>
+            </div>
+            <div class="kpi-info">
+              <h3 class="kpi-value">{{ santeChamps }}%</h3>
+              <p class="kpi-label">Santé Globale des Champs</p>
+              <span class="kpi-change negative">-1.5% vs semaine passée</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- Graphiques et Alertes -->
+  <div class="row">
+    <div class="col-md-8 mb-4">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Rendement par Culture</mat-card-title>
+          <mat-card-subtitle>Saison des pluies 2024</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="chart-container" style="height: 300px;">
+            <canvas baseChart
+              [data]="barChartData"
+              [options]="barChartOptions"
+              [type]="barChartType">
+            </canvas>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-md-4 mb-4">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Alertes & Recommandations</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="alertes-list">
+            <div *ngFor="let alerte of alertes" class="alerte-item" [ngClass]="'alerte-' + alerte.type">
+              <mat-icon>{{ alerte.icon }}</mat-icon>
+              <div class="alerte-content">
+                <h4>{{ alerte.titre }}</h4>
+                <p>{{ alerte.description }}</p>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- Évolution du rendement -->
+  <div class="row">
+    <div class="col-12">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Évolution du Rendement</mat-card-title>
+          <mat-card-subtitle>6 derniers mois</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="chart-container" style="height: 300px;">
+            <canvas baseChart
+              [data]="lineChartData"
+              [options]="lineChartOptions"
+              [type]="lineChartType">
+            </canvas>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
+

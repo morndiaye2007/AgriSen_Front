@@ -1,0 +1,40 @@
+.orders-container {
+  padding: 0;
+  
+  h1 {
+    margin-bottom: 1.5rem;
+    font-size: 1.75rem;
+    font-weight: 600;
+  }
+}
+
+table {
+  width: 100%;
+}
+
+.statut-pending {
+  color: #ff9800;
+  font-weight: 500;
+}
+
+.statut-confirmed {
+  color: #2196f3;
+  font-weight: 500;
+}
+
+.statut-shipped {
+  color: #00bcd4;
+  font-weight: 500;
+}
+
+.statut-delivered {
+  color: #4caf50;
+  font-weight: 500;
+}
+
+.statut-cancelled {
+  color: #f44336;
+  font-weight: 500;
+}
+
+
