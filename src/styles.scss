@@ -1,11 +1,49 @@
-/* You can add global styles to this file, and also import other style files */
+///* You can add global styles to this file, and also import other style files */
+//
+//
+//// Global icon font
+//@import "./assets/fonts/feather/style.css";
+//
+//
+//// // 3rd party plugins
+//@import "@mdi/font/css/materialdesignicons.min.css";
+//@import "perfect-scrollbar/css/perfect-scrollbar.css";
+//@import "highlight.js/styles/googlecode.css";
+//@import "ngx-owl-carousel-o/lib/styles/prebuilt-themes/owl.carousel.min.css";
+//@import "ngx-owl-carousel-o/lib/styles/prebuilt-themes/owl.theme.default.min.css";
+//@import "animate.css/animate.min.css";
+//@import "@ng-select/ng-select/themes/default.theme.css";
+//@import "metismenujs/scss/metismenujs";
+//@import "dropzone/dist/min/dropzone.min.css";
+//@import "quill/dist/quill.snow.css";
+//@import "angular-archwizard/styles/archwizard.css";
+//@import "simple-datatables/dist/style.css";
+//@import "@swimlane/ngx-datatable/index.css";
+//@import "@swimlane/ngx-datatable/themes/bootstrap.css";
+//@import "@swimlane/ngx-datatable/assets/icons.css";
+//
+//
+//// NobleUI styles for LTR
+//@import "./assets/scss/style";
+//
+//// Impot style for custom table
+//@import "./assets/scss/custom-table.scss";
+//
+//.modal-header {
+//    background-color: $primary;
+//    color: #ffff;
+//}
+//
+//
+//// NobleUI styles For RTL
+//// @import "./assets/scss/style.rtl.css";
 
+/* You can add global styles to this file, and also import other style files */
 
 // Global icon font
 @import "./assets/fonts/feather/style.css";
 
-
-// // 3rd party plugins
+// 3rd party plugins
 @import "@mdi/font/css/materialdesignicons.min.css";
 @import "perfect-scrollbar/css/perfect-scrollbar.css";
 @import "highlight.js/styles/googlecode.css";
@@ -22,18 +60,1191 @@
 @import "@swimlane/ngx-datatable/themes/bootstrap.css";
 @import "@swimlane/ngx-datatable/assets/icons.css";
 
-
 // NobleUI styles for LTR
 @import "./assets/scss/style";
 
-// Impot style for custom table
+// Import style for custom table
 @import "./assets/scss/custom-table.scss";
 
+// ==================== AGRISEN VARIABLES ====================
+$agrisen-primary: #22C55E;
+$agrisen-secondary: #10B981;
+$agrisen-success: #10B981;
+$agrisen-info: #3B82F6;
+$agrisen-warning: #F59E0B;
+$agrisen-danger: #EF4444;
+$agrisen-dark: #1F2937;
+$agrisen-light: #F9FAFB;
+
+$text-primary: #1F2937;
+$text-secondary: #6B7280;
+$text-light: #9CA3AF;
+
+$bg-white: #FFFFFF;
+$bg-light: #F9FAFB;
+$bg-gray: #F3F4F6;
+
+$border-color: #E5E7EB;
+$border-radius-sm: 6px;
+$border-radius: 8px;
+$border-radius-lg: 12px;
+$border-radius-xl: 16px;
+
+$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+$shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+
 .modal-header {
-    background-color: $primary;
-    color: #ffff;
+  background-color: $agrisen-primary;
+  color: #ffff;
 }
 
+// ==================== GLOBAL STYLES ====================
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-// NobleUI styles For RTL
-// @import "./assets/scss/style.rtl.css";
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 14px;
+  color: $text-primary;
+  background: $bg-light;
+  line-height: 1.6;
+}
+
+// ==================== BUTTONS ====================
+.btn {
+  padding: 0.625rem 1.25rem;
+  border-radius: $border-radius;
+  font-weight: 500;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: $shadow-md;
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.btn-primary {
+  background: $agrisen-primary;
+  color: white;
+
+  &:hover {
+    background: darken($agrisen-primary, 8%);
+  }
+}
+
+.btn-success {
+  background: $agrisen-success;
+  color: white;
+
+  &:hover {
+    background: darken($agrisen-success, 8%);
+  }
+}
+
+.btn-warning {
+  background: $agrisen-warning;
+  color: white;
+
+  &:hover {
+    background: darken($agrisen-warning, 8%);
+  }
+}
+
+.btn-danger {
+  background: $agrisen-danger;
+  color: white;
+
+  &:hover {
+    background: darken($agrisen-danger, 8%);
+  }
+}
+
+.btn-outline-secondary {
+  background: transparent;
+  border: 1px solid $border-color;
+  color: $text-primary;
+
+  &:hover {
+    background: $bg-gray;
+  }
+}
+
+.btn-link {
+  background: transparent;
+  color: $agrisen-primary;
+  padding: 0.375rem 0.75rem;
+
+  &:hover {
+    text-decoration: underline;
+    box-shadow: none;
+    transform: none;
+  }
+}
+
+.btn-sm {
+  padding: 0.375rem 0.875rem;
+  font-size: 13px;
+}
+
+.btn-block {
+  width: 100%;
+  justify-content: center;
+}
+
+.btn-icon {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+
+  &:hover {
+    background: $bg-gray;
+  }
+}
+
+// ==================== BADGES ====================
+.badge {
+  padding: 0.375rem 0.75rem;
+  border-radius: $border-radius-sm;
+  font-size: 12px;
+  font-weight: 500;
+  display: inline-block;
+}
+
+.badge-success {
+  background: #D1FAE5;
+  color: #065F46;
+}
+
+.badge-info {
+  background: #DBEAFE;
+  color: #1E40AF;
+}
+
+.badge-warning {
+  background: #FEF3C7;
+  color: #92400E;
+}
+
+.badge-danger {
+  background: #FEE2E2;
+  color: #991B1B;
+}
+
+.badge-secondary {
+  background: $bg-gray;
+  color: $text-secondary;
+}
+
+// ==================== FORMS ====================
+.form-group {
+  margin-bottom: 1.25rem;
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: $text-primary;
+    font-size: 14px;
+  }
+}
+
+.form-control,
+.form-select,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="date"],
+textarea,
+select {
+  width: 100%;
+  padding: 0.625rem 1rem;
+  border: 1px solid $border-color;
+  border-radius: $border-radius;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  background: white;
+
+  &:focus {
+    outline: none;
+    border-color: $agrisen-primary;
+    box-shadow: 0 0 0 3px rgba($agrisen-primary, 0.1);
+  }
+
+  &.error {
+    border-color: $agrisen-danger;
+  }
+}
+
+.search-box {
+  position: relative;
+  width: 100%;
+
+  input {
+    padding-left: 2.5rem;
+  }
+
+  i {
+    position: absolute;
+    left: 0.875rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: $text-light;
+  }
+}
+
+// ==================== TABLES ====================
+.table-container {
+  background: white;
+  border-radius: $border-radius-lg;
+  box-shadow: $shadow;
+  overflow: hidden;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+
+  thead {
+    background: $bg-light;
+
+    th {
+      padding: 1rem;
+      text-align: left;
+      font-weight: 600;
+      font-size: 12px;
+      text-transform: uppercase;
+      color: $text-secondary;
+      letter-spacing: 0.5px;
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid $border-color;
+      transition: background 0.2s ease;
+
+      &:hover {
+        background: $bg-light;
+      }
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+
+    td {
+      padding: 1rem;
+      color: $text-primary;
+    }
+  }
+}
+
+// ==================== CARDS ====================
+.card {
+  background: white;
+  border-radius: $border-radius-lg;
+  box-shadow: $shadow;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+
+  h2, h3, h4 {
+    margin: 0;
+    color: $text-primary;
+  }
+}
+
+// ==================== PAGE LAYOUTS ====================
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+
+  .header-left {
+    flex: 1;
+  }
+
+  .page-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: $text-primary;
+    margin: 0 0 0.5rem 0;
+  }
+
+  .page-subtitle {
+    color: $text-secondary;
+    margin: 0;
+    font-size: 14px;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+}
+
+// ==================== PARCELLES (LIST AGENT) ====================
+.parcelles-container {
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem;
+    background: white;
+    box-shadow: $shadow;
+    margin-bottom: 1.5rem;
+
+    .logo-section {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+
+      .logo {
+        width: 40px;
+        height: 40px;
+      }
+
+      .app-name {
+        font-weight: 600;
+        font-size: 18px;
+        color: $text-primary;
+      }
+    }
+
+    .title {
+      flex: 1;
+      text-align: center;
+      font-size: 24px;
+      font-weight: 700;
+      margin: 0;
+    }
+  }
+
+  .content {
+    display: grid;
+    grid-template-columns: 250px 1fr 350px;
+    gap: 1.5rem;
+    padding: 0 1.5rem;
+  }
+
+  .sidebar {
+    .menu {
+      background: white;
+      border-radius: $border-radius-lg;
+      box-shadow: $shadow;
+      padding: 1rem;
+
+      .menu-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.875rem 1rem;
+        border-radius: $border-radius;
+        color: $text-secondary;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        margin-bottom: 0.5rem;
+
+        &:hover {
+          background: $bg-light;
+          color: $text-primary;
+        }
+
+        &.active {
+          background: rgba($agrisen-primary, 0.1);
+          color: $agrisen-primary;
+          font-weight: 600;
+        }
+      }
+    }
+  }
+
+  .main-content {
+    .map-section {
+      background: white;
+      border-radius: $border-radius-lg;
+      box-shadow: $shadow;
+      height: 400px;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+
+      .map-container {
+        width: 100%;
+        height: 100%;
+        background: $bg-light;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: $text-light;
+      }
+    }
+
+    .parcelles-list {
+      background: white;
+      border-radius: $border-radius-lg;
+      box-shadow: $shadow;
+      padding: 1.5rem;
+
+      .search-filters {
+        margin-bottom: 1.5rem;
+
+        .search-box {
+          margin-bottom: 1rem;
+        }
+
+        .filter-tabs {
+          display: flex;
+          gap: 0.5rem;
+          flex-wrap: wrap;
+
+          button {
+            padding: 0.5rem 1rem;
+            border-radius: $border-radius;
+            border: 1px solid $border-color;
+            background: white;
+            color: $text-secondary;
+            cursor: pointer;
+            transition: all 0.2s ease;
+
+            &:hover {
+              background: $bg-light;
+            }
+
+            &.active {
+              background: $agrisen-primary;
+              color: white;
+              border-color: $agrisen-primary;
+            }
+          }
+        }
+      }
+
+      .parcelles-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .parcelle-card {
+        border: 1px solid $border-color;
+        border-radius: $border-radius-lg;
+        padding: 1.25rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &:hover {
+          box-shadow: $shadow-md;
+          border-color: $agrisen-primary;
+        }
+
+        &.selected {
+          border-color: $agrisen-primary;
+          background: rgba($agrisen-primary, 0.02);
+        }
+
+        .parcelle-header {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+
+          .parcelle-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba($agrisen-primary, 0.1);
+            border-radius: $border-radius;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: $agrisen-primary;
+            font-size: 24px;
+          }
+
+          .parcelle-info {
+            flex: 1;
+
+            h3 {
+              margin: 0 0 0.25rem 0;
+              font-size: 16px;
+              color: $text-primary;
+            }
+
+            .culture-type {
+              margin: 0;
+              font-size: 13px;
+              color: $text-secondary;
+            }
+          }
+
+          .btn-details {
+            padding: 0.5rem 1rem;
+            background: $agrisen-primary;
+            color: white;
+            border: none;
+            border-radius: $border-radius;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+
+            &:hover {
+              background: darken($agrisen-primary, 8%);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .details-panel {
+    background: white;
+    border-radius: $border-radius-lg;
+    box-shadow: $shadow;
+    padding: 1.5rem;
+    height: fit-content;
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+
+      h2 {
+        margin: 0;
+        font-size: 18px;
+      }
+
+      .action-buttons {
+        display: flex;
+        gap: 0.5rem;
+      }
+    }
+
+    .panel-content {
+      .info-section {
+        margin-bottom: 1.5rem;
+
+        h3 {
+          margin: 0 0 0.5rem 0;
+          font-size: 20px;
+          color: $text-primary;
+        }
+
+        .parcelle-id,
+        .parcelle-size {
+          color: $text-secondary;
+          font-size: 14px;
+          margin: 0.25rem 0;
+        }
+      }
+
+      .coordinates,
+      .current-culture {
+        margin-bottom: 1.5rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid $border-color;
+
+        h4 {
+          margin: 0 0 0.75rem 0;
+          font-size: 14px;
+          font-weight: 600;
+          color: $text-primary;
+        }
+
+        p {
+          margin: 0;
+          color: $text-secondary;
+          font-size: 14px;
+        }
+      }
+
+      .culture-details {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+
+        .culture-icon {
+          width: 48px;
+          height: 48px;
+          background: #FEF3C7;
+          border-radius: $border-radius;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 24px;
+        }
+
+        .culture-name {
+          font-weight: 600;
+          color: $text-primary;
+          margin: 0;
+        }
+
+        .culture-variety {
+          color: $text-secondary;
+          font-size: 13px;
+          margin: 0;
+        }
+      }
+
+      .culture-dates {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+
+        > div {
+          display: flex;
+          flex-direction: column;
+
+          .label {
+            font-size: 12px;
+            color: $text-secondary;
+            margin-bottom: 0.25rem;
+          }
+
+          .value {
+            font-weight: 500;
+            color: $text-primary;
+          }
+        }
+      }
+
+      .soil-humidity {
+        h4 {
+          margin: 0 0 1rem 0;
+          font-size: 14px;
+          font-weight: 600;
+        }
+
+        .humidity-visual {
+          .grass-image {
+            width: 100%;
+            height: 120px;
+            background: linear-gradient(180deg, #22C55E 0%, #16A34A 100%);
+            border-radius: $border-radius;
+            margin-bottom: 0.75rem;
+          }
+
+          .humidity-bar {
+            width: 100%;
+            height: 8px;
+            background: $bg-gray;
+            border-radius: 4px;
+            overflow: hidden;
+
+            .humidity-level {
+              height: 100%;
+              background: $agrisen-primary;
+              transition: width 0.3s ease;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// ==================== MARCHE ====================
+.marche-container {
+  padding: 2rem;
+
+  .marche-content {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 2rem;
+  }
+
+  .sidebar-filters {
+    .filter-section {
+      background: white;
+      border-radius: $border-radius-lg;
+      box-shadow: $shadow;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+
+      h3, h4 {
+        margin: 0 0 1rem 0;
+        font-size: 16px;
+        font-weight: 600;
+      }
+
+      .category-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+
+        .category-item {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          padding: 0.75rem;
+          border-radius: $border-radius;
+          border: 1px solid $border-color;
+          background: white;
+          text-align: left;
+          cursor: pointer;
+          transition: all 0.2s ease;
+
+          &:hover {
+            background: $bg-light;
+          }
+
+          &.active {
+            background: rgba($agrisen-primary, 0.1);
+            border-color: $agrisen-primary;
+            color: $agrisen-primary;
+          }
+        }
+      }
+
+      .checkbox-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+
+        label {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+
+  .products-section {
+    .products-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+
+      .products-count {
+        font-weight: 500;
+        color: $text-secondary;
+      }
+
+      .products-actions {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+      }
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+
+      &.list-view {
+        grid-template-columns: 1fr;
+
+        .product-card {
+          display: flex;
+          flex-direction: row;
+
+          .product-image {
+            width: 200px;
+            height: 200px;
+          }
+
+          .product-content {
+            flex: 1;
+          }
+        }
+      }
+    }
+
+    .product-card {
+      background: white;
+      border-radius: $border-radius-lg;
+      box-shadow: $shadow;
+      overflow: hidden;
+      transition: all 0.3s ease;
+
+      &:hover {
+        box-shadow: $shadow-lg;
+        transform: translateY(-4px);
+      }
+
+      .product-image {
+        position: relative;
+        width: 100%;
+        height: 220px;
+        overflow: hidden;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .badge {
+          position: absolute;
+          top: 1rem;
+          right: 1rem;
+        }
+      }
+
+      .product-content {
+        padding: 1.25rem;
+
+        .product-name {
+          margin: 0 0 0.5rem 0;
+          font-size: 18px;
+          font-weight: 600;
+          color: $text-primary;
+        }
+
+        .product-ferme {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          margin: 0 0 1rem 0;
+          color: $text-secondary;
+          font-size: 13px;
+        }
+
+        .product-footer {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+
+          .product-price {
+            .price {
+              font-size: 20px;
+              font-weight: 700;
+              color: $agrisen-primary;
+            }
+
+            .unite {
+              font-size: 13px;
+              color: $text-secondary;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .pagination-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+
+    .page-numbers {
+      display: flex;
+      gap: 0.5rem;
+
+      .btn-page {
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        border-radius: $border-radius;
+        border: 1px solid $border-color;
+        background: white;
+        cursor: pointer;
+
+        &:hover {
+          background: $bg-light;
+        }
+
+        &.active {
+          background: $agrisen-primary;
+          color: white;
+          border-color: $agrisen-primary;
+        }
+      }
+    }
+  }
+}
+
+// ==================== COMMANDES ====================
+.commandes-container {
+  padding: 2rem;
+
+  .commandes-tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+
+    .tab-button {
+      padding: 0.875rem 1.5rem;
+      border-radius: $border-radius;
+      border: 1px solid $border-color;
+      background: white;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: $bg-light;
+      }
+
+      &.active {
+        background: $agrisen-primary;
+        color: white;
+        border-color: $agrisen-primary;
+      }
+    }
+  }
+
+  .filters-bar {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+
+    .search-box {
+      flex: 1;
+    }
+
+    .filter-group {
+      display: flex;
+      gap: 0.75rem;
+    }
+  }
+
+  .commande-id {
+    font-weight: 600;
+    color: $agrisen-primary;
+  }
+
+  .client-name {
+    font-weight: 500;
+  }
+
+  .prix {
+    font-weight: 600;
+    color: $text-primary;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: $text-light;
+
+    i {
+      font-size: 64px;
+      margin-bottom: 1rem;
+    }
+  }
+}
+
+// ==================== CONSEILS ====================
+.conseils-container {
+  padding: 2rem;
+
+  .conseil-jour-card {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%);
+    border-radius: $border-radius-lg;
+    overflow: hidden;
+    margin-bottom: 2rem;
+
+    .conseil-content {
+      padding: 3rem;
+
+      h3 {
+        color: $agrisen-primary;
+        font-size: 14px;
+        font-weight: 600;
+        text-transform: uppercase;
+        margin: 0 0 0.5rem 0;
+      }
+
+      h2 {
+        font-size: 28px;
+        margin: 0 0 1rem 0;
+      }
+
+      p {
+        margin: 0 0 1.5rem 0;
+        color: $text-secondary;
+      }
+    }
+
+    .conseil-image {
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+  }
+
+  .meteo-section {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+
+    .meteo-card,
+    .alertes-card {
+      background: white;
+      border-radius: $border-radius-lg;
+      box-shadow: $shadow;
+      padding: 1.5rem;
+    }
+
+    .meteo-current {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 2rem;
+      margin: 1.5rem 0;
+
+      .temperature {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .icon {
+          font-size: 64px;
+          margin-bottom: 0.5rem;
+        }
+
+        .value {
+          font-size: 48px;
+          font-weight: 700;
+          color: $text-primary;
+        }
+      }
+
+      .meteo-details {
+        .detail-item {
+          display: flex;
+          justify-content: space-between;
+          padding: 0.5rem 0;
+          border-bottom: 1px solid $border-color;
+
+          &:last-child {
+            border-bottom: none;
+          }
+        }
+      }
+    }
+
+    .meteo-prevision {
+      display: flex;
+      gap: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid $border-color;
+
+      .prevision-jour {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+
+        .jour {
+          font-size: 13px;
+          color: $text-secondary;
+        }
+
+        .icon {
+          font-size: 32px;
+        }
+
+        .temp {
+          font-weight: 600;
+        }
+      }
+    }
+
+    .alertes-card {
+      .alerte-item {
+        display: flex;
+        gap: 1rem;
+        padding: 1rem 0;
+        border-bottom: 1px solid $border-color;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        i {
+          font-size: 24px;
+          flex-shrink: 0;
+        }
+
+        h4 {
+          margin: 0 0 0.25rem 0;
+          font-size: 14px;
+          font-weight: 600;
+        }
+
+        p {
+          margin: 0;
+          font-size: 13px;
+          color: $text-secondary;
+        }
+      }
+    }
+  }
+
+  .videos-section {
+    margin-bottom: 2rem;
+
+    .section-header {
+      margin-bottom: 1.5rem;
+
+      h3 {
+        margin: 0;
+        font-size: 20px;
+        font-weight: 600;
+      }
+    }
+
+    .videos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+
+      .video-card {
+        background: white;
+        border-radius: 8px;
+      }
+    }
+  }
+}

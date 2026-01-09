@@ -5,7 +5,7 @@ import { AgentRoutingModule } from './agent-routing.module';
 import { ListAgentComponent } from './list-agent/list-agent.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
-import { MatTableModule } from '@angular/material/table'; 
+import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule} from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
@@ -18,12 +18,20 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { MatSortModule } from '@angular/material/sort';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { ParcelleCardComponent } from '../parcelles/parcelle-card/parcelle-card.component';
+import { ParcelleMapComponent } from '../parcelles/parcelle-map/parcelle-map.component';
+import { ParcelleFilterComponent } from '../parcelles/parcelle-filter/parcelle-filter.component';
+import { ParcelleStatsComponent } from '../parcelles/parcelle-stats/parcelle-stats.component';
 
 @NgModule({
   declarations: [
     ListAgentComponent,
     AddAgentComponent,
-    EditAgentComponent
+    EditAgentComponent,
+    ParcelleCardComponent,
+    ParcelleMapComponent,
+    ParcelleFilterComponent,
+    ParcelleStatsComponent
   ],
   imports: [
     CommonModule,

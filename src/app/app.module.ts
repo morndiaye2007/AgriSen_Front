@@ -19,15 +19,27 @@ import { FeatherIconModule } from './core/feather-icon/feather-icon.module';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ChoixPaysComponent } from './views/pages/pays/choix-pays/choix-pays.component';
 import { AddAgentComponent } from './views/pages/agent/add-agent/add-agent.component';
+import { DashboardComponent } from './views/pages/dashboard/dashboard.component';
+import { JournalComponent } from './views/pages/journal/journal.component';
+import { ParcellesComponent } from './views/pages/parcelles/parcelles.component';
+import { NotFoundComponent } from './views/pages/error/not-found/not-found.component';
+import { UnauthorizedComponent } from './views/pages/error/unauthorized/unauthorized.component';
+import { ServerErrorComponent } from './views/pages/error/server-error/server-error.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     ErrorPageComponent,
+    DashboardComponent,
+    JournalComponent,
+    ParcellesComponent,
+    NotFoundComponent,
+    UnauthorizedComponent,
+    ServerErrorComponent,
     // ChoixPaysComponent,
     // AddAgentComponent
-    
+
   ],
   imports: [
     BrowserModule,
