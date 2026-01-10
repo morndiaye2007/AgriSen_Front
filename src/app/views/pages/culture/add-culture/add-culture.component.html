@@ -1,1 +1,178 @@
-<p>add-culture works!</p>
+<div class="add-culture-container">
+  <div class="page-header">
+    <div class="header-content">
+      <button class="btn-back" (click)="cancel()">
+        <i class="fas fa-arrow-left"></i>
+      </button>
+      <div>
+        <h1>
+          <i class="fas fa-seedling"></i>
+          Ajouter une Culture
+        </h1>
+        <p class="subtitle">Créer une nouvelle culture dans le système</p>
+      </div>
+    </div>
+  </div>
+
+  <form [formGroup]="cultureForm" (ngSubmit)="onSubmit()" class="culture-form">
+    <div class="form-card">
+
+      <div class="alert alert-danger" *ngIf="error" role="alert">
+        <i class="fas fa-exclamation-circle"></i>
+        {{ error }}
+      </div>
+
+      <!-- Section Image -->
+      <div class="form-section">
+        <h3 class="section-title">
+          <i class="fas fa-image"></i>
+          Image de la culture
+        </h3>
+
+        <div class="image-upload-area">
+          <div class="image-preview" *ngIf="imagePreview">
+            <img [src]="imagePreview" alt="Aperçu">
+            <button type="button" class="btn-remove-image" (click)="removeImage()">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+
+          <div class="upload-placeholder" *ngIf="!imagePreview">
+            <i class="fas fa-cloud-upload-alt"></i>
+            <p>Cliquez pour ajouter une image</p>
+            <span class="file-info">PNG, JPG jusqu'à 5MB</span>
+          </div>
+
+          <input
+            type="file"
+            id="imageUpload"
+            accept="image/*"
+            (change)="onImageSelected($event)"
+            style="display: none;">
+
+          <label for="imageUpload" class="btn btn-outline-primary" *ngIf="!imagePreview">
+            <i class="fas fa-upload"></i>
+            Choisir une image
+          </label>
+        </div>
+      </div>
+
+      <!-- Section Informations générales -->
+      <div class="form-section">
+        <h3 class="section-title">
+          <i class="fas fa-info-circle"></i>
+          Informations générales
+        </h3>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="nom">
+              Nom de la culture *
+            </label>
+            <input
+              type="text"
+              id="nom"
+              class="form-control"
+              formControlName="nom"
+              placeholder="Ex: Arachide, Mil, Tomate"
+              [class.is-invalid]="cultureForm.get('nom')?.invalid && cultureForm.get('nom')?.touched">
+
+            <div class="invalid-feedback" *ngIf="cultureForm.get('nom')?.hasError('required') && cultureForm.get('nom')?.touched">
+              Le nom est requis
+            </div>
+            <div class="invalid-feedback" *ngIf="cultureForm.get('nom')?.hasError('minlength') && cultureForm.get('nom')?.touched">
+              Minimum 2 caractères
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="categorie">
+              Catégorie *
+            </label>
+            <select
+              id="categorie"
+              class="form-control"
+              formControlName="categorie"
+              [class.is-invalid]="cultureForm.get('categorie')?.invalid && cultureForm.get('categorie')?.touched">
+              <option value="">Sélectionner une catégorie</option>
+              <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+            </select>
+
+            <div class="invalid-feedback" *ngIf="cultureForm.get('categorie')?.hasError('required') && cultureForm.get('categorie')?.touched">
+              La catégorie est requise
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="description">
+            Description
+          </label>
+          <textarea
+            id="description"
+            class="form-control"
+            formControlName="description"
+            rows="4"
+            placeholder="Description détaillée de la culture..."></textarea>
+        </div>
+      </div>
+
+      <!-- Section Caractéristiques -->
+      <div class="form-section">
+        <h3 class="section-title">
+          <i class="fas fa-chart-line"></i>
+          Caractéristiques de culture
+        </h3>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="dureeCroissance">
+              Durée de croissance (jours)
+            </label>
+            <input
+              type="number"
+              id="dureeCroissance"
+              class="form-control"
+              formControlName="dureeCroissance"
+              placeholder="Ex: 90"
+              min="1">
+          </div>
+
+          <div class="form-group">
+            <label for="saisonOptimale">
+              Saison optimale
+            </label>
+            <select
+              id="saisonOptimale"
+              class="form-control"
+              formControlName="saisonOptimale">
+              <option value="">Sélectionner une saison</option>
+              <option *ngFor="let saison of saisons" [value]="saison">{{ saison }}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Boutons d'action -->
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" (click)="cancel()">
+          <i class="fas fa-times"></i>
+          Annuler
+        </button>
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="loading || cultureForm.invalid">
+          <span *ngIf="!loading">
+            <i class="fas fa-save"></i>
+            Enregistrer
+          </span>
+          <span *ngIf="loading">
+            <i class="fas fa-spinner fa-spin"></i>
+            Enregistrement...
+          </span>
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

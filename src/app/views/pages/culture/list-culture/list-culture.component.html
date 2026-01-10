@@ -1,1 +1,142 @@
-<p>list-culture works!</p>
+<div class="cultures-container">
+  <div class="page-header">
+    <div class="header-left">
+      <h1>
+        <i class="fas fa-seedling"></i>
+        Catalogue des Cultures
+      </h1>
+      <p class="subtitle">Gérez les types de cultures disponibles</p>
+    </div>
+    <div class="header-right">
+      <button class="btn btn-success" (click)="addCulture()">
+        <i class="fas fa-plus"></i>
+        Nouvelle Culture
+      </button>
+    </div>
+  </div>
+
+  <div class="filters-section">
+    <div class="search-box">
+      <i class="fas fa-search"></i>
+      <input
+        type="text"
+        class="form-control"
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="onSearch()"
+        placeholder="Rechercher une culture...">
+    </div>
+
+    <div class="filter-group">
+      <select
+        class="form-select"
+        [(ngModel)]="selectedCategorie"
+        (ngModelChange)="applyFilters()">
+        <option value="">Toutes les catégories</option>
+        <option *ngFor="let cat of categories" [value]="cat">
+          {{ cat }}
+        </option>
+      </select>
+
+      <button class="btn btn-outline-secondary" (click)="resetFilters()">
+        <i class="fas fa-redo"></i>
+        Réinitialiser
+      </button>
+    </div>
+
+    <div class="view-toggle">
+      <button
+        class="btn-icon"
+        [class.active]="viewMode === 'grid'"
+        (click)="toggleViewMode()"
+        title="Vue grille">
+        <i class="fas fa-th"></i>
+      </button>
+      <button
+        class="btn-icon"
+        [class.active]="viewMode === 'list'"
+        (click)="toggleViewMode()"
+        title="Vue liste">
+        <i class="fas fa-list"></i>
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Chargement des cultures...</p>
+  </div>
+
+  <div *ngIf="!loading" class="cultures-content">
+    <div class="cultures-grid" [class.list-mode]="viewMode === 'list'">
+      <div
+        *ngFor="let culture of filteredCultures"
+        class="culture-card"
+        [class.list-card]="viewMode === 'list'"
+        (click)="viewDetails(culture.id)">
+
+        <div class="card-image">
+          <img
+            [src]="culture.imageUrl || 'assets/images/default-culture.jpg'"
+            [alt]="culture.nom"
+            onerror="this.src='assets/images/default-culture.jpg'">
+          <span class="culture-icon">{{ getCultureIcon(culture.categorie) }}</span>
+        </div>
+
+        <div class="card-content">
+          <div class="card-header">
+            <h3>{{ culture.nom }}</h3>
+            <span class="badge badge-primary">{{ culture.categorie }}</span>
+          </div>
+
+          <p class="description" *ngIf="culture.description">
+            {{ culture.description }}
+          </p>
+
+          <div class="card-info">
+            <div class="info-item" *ngIf="culture.dureeCroissance">
+              <i class="fas fa-calendar-alt"></i>
+              <span>{{ culture.dureeCroissance }} jours</span>
+            </div>
+            <div class="info-item" *ngIf="culture.saisonOptimale">
+              <i class="fas fa-sun"></i>
+              <span>{{ culture.saisonOptimale }}</span>
+            </div>
+          </div>
+
+          <div class="card-actions">
+            <button
+              class="btn btn-sm btn-primary"
+              (click)="viewDetails(culture.id); $event.stopPropagation()">
+              <i class="fas fa-eye"></i>
+              Détails
+            </button>
+            <div class="action-buttons">
+              <button
+                class="btn-icon"
+                (click)="editCulture(culture.id); $event.stopPropagation()"
+                title="Modifier">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button
+                class="btn-icon danger"
+                (click)="deleteCulture(culture.id); $event.stopPropagation()"
+                title="Supprimer">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="filteredCultures.length === 0" class="empty-state">
+      <i class="fas fa-seedling"></i>
+      <h3>Aucune culture trouvée</h3>
+      <p>Essayez de modifier vos filtres ou créez une nouvelle culture</p>
+      <button class="btn btn-primary" (click)="addCulture()">
+        <i class="fas fa-plus"></i>
+        Créer une culture
+      </button>
+    </div>
+  </div>
+</div>
