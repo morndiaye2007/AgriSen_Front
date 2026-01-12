@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+import {DashboardComponent} from "../../admin/dashboard/dashboard.component";
 
 @Component({
   selector: 'app-login',
@@ -14,7 +15,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     // get return url from route parameters or default to '/'
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/admin/agent';
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/admin/DashboardComponent';
   }
 
   onLoggedin(e: Event) {
