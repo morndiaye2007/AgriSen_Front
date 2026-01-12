@@ -1,1 +1,46 @@
-<p>culture-card works!</p>
+<div class="culture-card" (click)="onViewDetails()">
+  <div class="card-image">
+    <img [src]="culture.imageUrl || 'assets/images/default-culture.jpg'"
+         [alt]="culture.nom"
+         (error)="onImageError($event)">
+    <div class="categorie-badge" [style.background-color]="getCategorieColor()">
+      <i class="fas" [ngClass]="getCategorieIcon()"></i>
+      {{ culture.categorie }}
+    </div>
+  </div>
+
+  <div class="card-content">
+    <h3>{{ culture.nom }}</h3>
+
+    <p class="description" *ngIf="culture.description">
+      {{ culture.description | slice:0:100 }}{{ culture.description && culture.description.length > 100 ? '...' : '' }}
+    </p>
+
+    <div class="card-info">
+      <div class="info-item">
+        <i class="fas fa-clock"></i>
+        <span>{{ culture.dureeCroissance }} jours</span>
+      </div>
+      <div class="info-item">
+        <i class="fas fa-calendar-alt"></i>
+        <span>{{ culture.saisonOptimale }}</span>
+      </div>
+    </div>
+
+    <div class="card-tags" *ngIf="culture.categorie">
+      <span class="tag">{{ culture.categorie }}</span>
+    </div>
+  </div>
+
+  <div class="card-actions">
+    <button (click)="onEdit($event)" class="btn-icon" title="Modifier">
+      <i class="fas fa-edit"></i>
+    </button>
+    <button (click)="onDelete($event)" class="btn-icon delete" title="Supprimer">
+      <i class="fas fa-trash"></i>
+    </button>
+    <button (click)="onViewDetails()" class="btn btn-primary btn-sm">
+      <i class="fas fa-eye"></i> Détails
+    </button>
+  </div>
+</div>

@@ -1,12 +1,13 @@
-import {TypeNotification} from "./TypeNotification";
-
-export interface Notification {
+export interface AppNotification {
   id?: number;
   utilisateurId: number;
   titre: string;
-  message?: string;
-  type: TypeNotification;
+  message: string;
+  type: 'info' | 'warning' | 'error' | 'success';
   lu: boolean;
-  dateLecture?: Date;
   createdAt?: Date;
+  updatedAt?: Date;
+  parcelleId?: number;
+  activityId?: number;
+  priority?: 'low' | 'medium' | 'high';
 }

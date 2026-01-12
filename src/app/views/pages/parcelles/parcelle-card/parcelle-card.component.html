@@ -1,1 +1,62 @@
-<p>parcelle-card works!</p>
+<div class="parcelle-card" [class.inactive]="!parcelle.active" (click)="onViewDetails()">
+  <div class="card-header">
+    <div class="parcelle-info">
+      <h3>{{ parcelle.nom }}</h3>
+      <span class="parcelle-id">{{ parcelle.id }}</span>
+    </div>
+    <div class="status-badge" [class.active]="parcelle.active" [class.inactive]="!parcelle.active">
+      {{ parcelle.active ? 'Active' : 'Inactive' }}
+    </div>
+  </div>
+
+  <div class="card-body">
+    <div class="info-row">
+      <i class="fas fa-ruler-combined"></i>
+      <span>Superficie: <strong>{{ parcelle.superficie }} hectares</strong></span>
+    </div>
+
+    <div class="info-row" *ngIf="parcelle.typeSol">
+      <i class="fas fa-mountain"></i>
+      <span>Type de sol: <strong>{{ parcelle.typeSol }}</strong></span>
+    </div>
+
+    <div class="info-row" *ngIf="parcelle.sourceEau">
+      <i class="fas fa-tint"></i>
+      <span>Source d'eau: <strong>{{ parcelle.sourceEau }}</strong></span>
+    </div>
+
+    <div class="info-row" *ngIf="parcelle.cultureId">
+      <i class="fas fa-seedling"></i>
+      <span>Culture actuelle: <strong>{{ getCultureName() }}</strong></span>
+    </div>
+
+    <div class="info-row" *ngIf="parcelle.ville">
+      <i class="fas fa-map-marker-alt"></i>
+      <span>{{ parcelle.ville }}</span>
+    </div>
+
+    <div class="description" *ngIf="parcelle.description">
+      <p>{{ parcelle.description }}</p>
+    </div>
+
+    <div class="coordinates" *ngIf="parcelle.latitude && parcelle.longitude">
+      <i class="fas fa-compass"></i>
+      <span>{{ parcelle.latitude }}°N, {{ parcelle.longitude }}°E</span>
+    </div>
+  </div>
+
+  <div class="card-footer">
+    <button (click)="onEdit($event)" class="btn-icon" title="Modifier">
+      <i class="fas fa-edit"></i>
+    </button>
+    <button (click)="onToggleStatus($event)" class="btn-icon" [title]="parcelle.active ? 'Désactiver' : 'Activer'">
+      <i class="fas" [ngClass]="parcelle.active ? 'fa-toggle-on' : 'fa-toggle-off'"></i>
+    </button>
+    <button (click)="onDelete($event)" class="btn-icon delete" title="Supprimer">
+      <i class="fas fa-trash"></i>
+    </button>
+    <button (click)="onViewMap($event)" class="btn btn-primary btn-sm" *ngIf="parcelle.latitude && parcelle.longitude">
+      <i class="fas fa-map"></i> Voir sur la carte
+    </button>
+  </div>
+</div>

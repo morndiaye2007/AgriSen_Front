@@ -1,1 +1,241 @@
-<p>detail-culture works!</p>
+<div class="detail-container" *ngIf="culture">
+  <div class="detail-header">
+    <button (click)="goBack()" class="btn-back">
+      <i class="fas fa-arrow-left"></i> Retour
+    </button>
+    <div class="header-title">
+      <h2>{{ culture.nom }}</h2>
+      <span class="culture-category" [style.background-color]="getCategorieColor()">
+        <i class="fas" [ngClass]="getCategorieIcon()"></i>
+        {{ culture.categorie }}
+      </span>
+    </div>
+    <div class="header-actions">
+      <button (click)="editCulture()" class="btn btn-secondary">
+        <i class="fas fa-edit"></i> Modifier
+      </button>
+      <button (click)="deleteCulture()" class="btn btn-danger">
+        <i class="fas fa-trash"></i> Supprimer
+      </button>
+    </div>
+  </div>
+
+  <div class="detail-content">
+    <!-- Image et informations principales -->
+    <div class="main-section">
+      <div class="culture-image">
+        <img [src]="culture.imageUrl || 'assets/images/default-culture.jpg'"
+             [alt]="culture.nom"
+             (error)="onImageError($event)">
+      </div>
+
+      <div class="main-info">
+        <div class="info-card">
+          <h3><i class="fas fa-info-circle"></i> Informations générales</h3>
+
+          <div class="info-grid">
+            <div class="info-item">
+              <label>Nom:</label>
+              <span class="value">{{ culture.nom }}</span>
+            </div>
+
+            <div class="info-item" *ngIf="culture.categorie">
+              <label>Catégorie:</label>
+              <span class="value">{{ culture.categorie }}</span>
+            </div>
+
+            <div class="info-item" *ngIf="culture.dureeCroissance">
+              <label>Durée de croissance:</label>
+              <span class="value">
+                <i class="fas fa-clock"></i>
+                {{ culture.dureeCroissance }} jours
+              </span>
+            </div>
+
+            <div class="info-item" *ngIf="culture.saisonOptimale">
+              <label>Saison optimale:</label>
+              <span class="value">
+                <i class="fas fa-calendar-alt"></i>
+                {{ culture.saisonOptimale }}
+              </span>
+            </div>
+          </div>
+
+          <div class="description-section" *ngIf="culture.description">
+            <label>Description:</label>
+            <p>{{ culture.description }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Statistiques d'utilisation -->
+    <div class="stats-section">
+      <h3><i class="fas fa-chart-bar"></i> Statistiques d'utilisation</h3>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon green">
+            <i class="fas fa-map-marked-alt"></i>
+          </div>
+          <div class="stat-content">
+            <div class="stat-value">{{ usageStats.parcellesCount }}</div>
+            <div class="stat-label">Parcelles cultivées</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon blue">
+            <i class="fas fa-ruler-combined"></i>
+          </div>
+          <div class="stat-content">
+            <div class="stat-value">{{ usageStats.totalSuperficie | number:'1.2-2' }} ha</div>
+            <div class="stat-label">Superficie totale</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon orange">
+            <i class="fas fa-calendar-check"></i>
+          </div>
+          <div class="stat-content">
+            <div class="stat-value">{{ usageStats.activitiesCount }}</div>
+            <div class="stat-label">Activités enregistrées</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon purple">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <div class="stat-content">
+            <div class="stat-value">{{ usageStats.averageYield | number:'1.1-1' }} kg/ha</div>
+            <div class="stat-label">Rendement moyen</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Parcelles utilisant cette culture -->
+    <div class="parcelles-section" *ngIf="parcellesWithCulture.length > 0">
+      <h3><i class="fas fa-map"></i> Parcelles cultivées ({{ parcellesWithCulture.length }})</h3>
+
+      <div class="parcelles-grid">
+        <div *ngFor="let parcelle of parcellesWithCulture" class="parcelle-item">
+          <div class="parcelle-header">
+            <h4>{{ parcelle.nom }}</h4>
+            <span class="status-badge" [class.active]="parcelle.active">
+              {{ parcelle.active ? 'Active' : 'Inactive' }}
+            </span>
+          </div>
+          <div class="parcelle-info">
+            <div class="info-row">
+              <i class="fas fa-ruler-combined"></i>
+              <span>{{ parcelle.superficie }} ha</span>
+            </div>
+            <div class="info-row" *ngIf="parcelle.ville">
+              <i class="fas fa-map-marker-alt"></i>
+              <span>{{ parcelle.ville }}</span>
+            </div>
+            <div class="info-row" *ngIf="parcelle.typeSol">
+              <i class="fas fa-mountain"></i>
+              <span>{{ parcelle.typeSol }}</span>
+            </div>
+          </div>
+          <button (click)="viewParcelle(parcelle)" class="btn btn-sm btn-outline">
+            <i class="fas fa-eye"></i> Voir détails
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Historique des activités -->
+    <div class="activities-section" *ngIf="recentActivities.length > 0">
+      <h3><i class="fas fa-history"></i> Activités récentes</h3>
+
+      <div class="timeline">
+        <div *ngFor="let activity of recentActivities" class="timeline-item">
+          <div class="timeline-marker" [style.background-color]="getActivityColor(activity.typeActivite)">
+            <i class="fas" [ngClass]="getActivityIcon(activity.typeActivite)"></i>
+          </div>
+          <div class="timeline-content">
+            <div class="activity-header">
+              <h4>{{ getActivityLabel(activity.typeActivite) }}</h4>
+              <span class="activity-date">{{ activity.dateActivite | date:'dd/MM/yyyy' }}</span>
+            </div>
+            <p *ngIf="activity.description">{{ activity.description }}</p>
+            <div class="activity-details" *ngIf="activity.quantite">
+              <span><strong>Quantité:</strong> {{ activity.quantite }} {{ activity.unite }}</span>
+              <span *ngIf="activity.cout"><strong>Coût:</strong> {{ activity.cout }} FCFA</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button (click)="viewAllActivities()" class="btn btn-secondary btn-block">
+        <i class="fas fa-list"></i> Voir toutes les activités
+      </button>
+    </div>
+
+    <!-- Conseils de culture -->
+    <div class="conseils-section">
+      <h3><i class="fas fa-lightbulb"></i> Conseils de culture</h3>
+
+      <div class="conseils-grid">
+        <div class="conseil-card">
+          <div class="conseil-icon">
+            <i class="fas fa-sun"></i>
+          </div>
+          <div class="conseil-content">
+            <h4>Conditions climatiques</h4>
+            <p>Température optimale: 20-30°C. Cette culture préfère {{ culture.saisonOptimale }}.</p>
+          </div>
+        </div>
+
+        <div class="conseil-card">
+          <div class="conseil-icon">
+            <i class="fas fa-tint"></i>
+          </div>
+          <div class="conseil-content">
+            <h4>Irrigation</h4>
+            <p>Arrosage régulier nécessaire. Éviter l'engorgement du sol.</p>
+          </div>
+        </div>
+
+        <div class="conseil-card">
+          <div class="conseil-icon">
+            <i class="fas fa-flask"></i>
+          </div>
+          <div class="conseil-content">
+            <h4>Fertilisation</h4>
+            <p>Apport d'engrais recommandé toutes les 3-4 semaines pendant la croissance.</p>
+          </div>
+        </div>
+
+        <div class="conseil-card">
+          <div class="conseil-icon">
+            <i class="fas fa-bug"></i>
+          </div>
+          <div class="conseil-content">
+            <h4>Protection</h4>
+            <p>Surveillance régulière contre les maladies et ravageurs.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="loading-container" *ngIf="loading">
+  <i class="fas fa-spinner fa-spin"></i>
+  <p>Chargement des détails...</p>
+</div>
+
+<div class="error-container" *ngIf="!culture && !loading">
+  <i class="fas fa-exclamation-triangle"></i>
+  <h3>Culture introuvable</h3>
+  <p>La culture demandée n'existe pas ou a été supprimée.</p>
+  <button (click)="goBack()" class="btn btn-primary">
+    <i class="fas fa-arrow-left"></i> Retour à la liste
+  </button>
+</div>

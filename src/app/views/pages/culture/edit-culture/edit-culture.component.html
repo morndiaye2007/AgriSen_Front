@@ -1,1 +1,120 @@
-<p>edit-culture works!</p>
+<div class="edit-container">
+  <div class="edit-header">
+    <button (click)="goBack()" class="btn-back">
+      <i class="fas fa-arrow-left"></i> Retour
+    </button>
+    <h2>{{ isEditMode ? 'Modifier' : 'Ajouter' }} une culture</h2>
+  </div>
+
+  <form [formGroup]="cultureForm" (ngSubmit)="onSubmit()" class="edit-form">
+    <div class="form-grid">
+      <!-- Nom -->
+      <div class="form-group">
+        <label for="nom">Nom de la culture *</label>
+        <input
+          type="text"
+          id="nom"
+          formControlName="nom"
+          class="form-control"
+          placeholder="Ex: Riz, Maïs, Tomate">
+        <div class="error-message" *ngIf="cultureForm.get('nom')?.invalid && cultureForm.get('nom')?.touched">
+          Le nom est requis
+        </div>
+      </div>
+
+      <!-- Catégorie -->
+      <div class="form-group">
+        <label for="categorie">Catégorie *</label>
+        <select id="categorie" formControlName="categorie" class="form-control">
+          <option value="">Sélectionner une catégorie</option>
+          <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+        </select>
+        <div class="error-message" *ngIf="cultureForm.get('categorie')?.invalid && cultureForm.get('categorie')?.touched">
+          La catégorie est requise
+        </div>
+      </div>
+
+      <!-- Durée de croissance -->
+      <div class="form-group">
+        <label for="dureeCroissance">Durée de croissance (jours) *</label>
+        <input
+          type="number"
+          id="dureeCroissance"
+          formControlName="dureeCroissance"
+          class="form-control"
+          placeholder="90"
+          min="1">
+        <div class="error-message" *ngIf="cultureForm.get('dureeCroissance')?.invalid && cultureForm.get('dureeCroissance')?.touched">
+          La durée de croissance est requise (minimum 1 jour)
+        </div>
+      </div>
+
+      <!-- Saison optimale -->
+      <div class="form-group">
+        <label for="saisonOptimale">Saison optimale *</label>
+        <select id="saisonOptimale" formControlName="saisonOptimale" class="form-control">
+          <option value="">Sélectionner une saison</option>
+          <option *ngFor="let saison of saisons" [value]="saison">{{ saison }}</option>
+        </select>
+        <div class="error-message" *ngIf="cultureForm.get('saisonOptimale')?.invalid && cultureForm.get('saisonOptimale')?.touched">
+          La saison optimale est requise
+        </div>
+      </div>
+
+      <!-- Description (full width) -->
+      <div class="form-group full-width">
+        <label for="description">Description</label>
+        <textarea
+          id="description"
+          formControlName="description"
+          class="form-control"
+          rows="4"
+          placeholder="Décrivez la culture, ses caractéristiques..."></textarea>
+      </div>
+
+      <!-- Image URL -->
+      <div class="form-group full-width">
+        <label for="imageUrl">URL de l'image</label>
+        <div class="image-input-group">
+          <input
+            type="text"
+            id="imageUrl"
+            formControlName="imageUrl"
+            class="form-control"
+            placeholder="https://exemple.com/image.jpg"
+            (change)="onImageUrlChange()">
+          <label for="fileInput" class="btn btn-secondary">
+            <i class="fas fa-upload"></i> Ou choisir un fichier
+          </label>
+          <input
+            type="file"
+            id="fileInput"
+            accept="image/*"
+            (change)="onFileSelect($event)"
+            style="display: none;">
+        </div>
+      </div>
+
+      <!-- Prévisualisation image -->
+      <div class="form-group full-width" *ngIf="imagePreview">
+        <label>Aperçu de l'image</label>
+        <div class="image-preview">
+          <img [src]="imagePreview" alt="Aperçu">
+          <button type="button" (click)="removeImage()" class="btn-remove">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" (click)="goBack()" class="btn btn-secondary" [disabled]="loading">
+        <i class="fas fa-times"></i> Annuler
+      </button>
+      <button type="submit" [disabled]="cultureForm.invalid || loading" class="btn btn-primary">
+        <i class="fas fa-save"></i>
+        {{ loading ? 'Enregistrement...' : (isEditMode ? 'Modifier' : 'Créer') }}
+      </button>
+    </div>
+  </form>
+</div>

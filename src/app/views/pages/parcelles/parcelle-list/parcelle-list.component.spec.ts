@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AddAgentComponent } from './add-agent.component';
+import { ParcelleListComponent } from './parcelle-list.component';
 
-describe('AddAgentComponent', () => {
-  let component: AddAgentComponent;
-  let fixture: ComponentFixture<AddAgentComponent>;
+describe('ParcelleListComponent', () => {
+  let component: ParcelleListComponent;
+  let fixture: ComponentFixture<ParcelleListComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AddAgentComponent ]
+      declarations: [ ParcelleListComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(AddAgentComponent);
+    fixture = TestBed.createComponent(ParcelleListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

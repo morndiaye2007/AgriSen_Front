@@ -1,1 +1,138 @@
-<p>parcelle-filter works!</p>
+<div class="parcelle-filter">
+  <div class="filter-header">
+    <h3><i class="fas fa-filter"></i> Filtres</h3>
+    <button (click)="resetFilters()" class="btn-reset">
+      <i class="fas fa-redo"></i> Réinitialiser
+    </button>
+  </div>
+
+  <div class="filter-content">
+    <!-- Recherche par nom -->
+    <div class="filter-group">
+      <label for="search">Rechercher</label>
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input
+          type="text"
+          id="search"
+          [(ngModel)]="filters.searchTerm"
+          (ngModelChange)="onFilterChange()"
+          placeholder="Rechercher par nom, culture...">
+      </div>
+    </div>
+
+    <!-- Filtre par culture -->
+    <div class="filter-group">
+      <label for="culture">Culture</label>
+      <select
+        id="culture"
+        [(ngModel)]="filters.cultureId"
+        (ngModelChange)="onFilterChange()"
+        class="filter-select">
+        <option value="">Toutes les cultures</option>
+        <option *ngFor="let culture of cultures" [value]="culture.id">
+          {{ culture.nom }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Filtre par type de sol -->
+    <div class="filter-group">
+      <label for="typeSol">Type de sol</label>
+      <select
+        id="typeSol"
+        [(ngModel)]="filters.typeSol"
+        (ngModelChange)="onFilterChange()"
+        class="filter-select">
+        <option value="">Tous les types</option>
+        <option value="Argileux">Argileux</option>
+        <option value="Sableux">Sableux</option>
+        <option value="Limoneux">Limoneux</option>
+        <option value="Humifère">Humifère</option>
+        <option value="Calcaire">Calcaire</option>
+      </select>
+    </div>
+
+    <!-- Filtre par source d'eau -->
+    <div class="filter-group">
+      <label for="sourceEau">Source d'eau</label>
+      <select
+        id="sourceEau"
+        [(ngModel)]="filters.sourceEau"
+        (ngModelChange)="onFilterChange()"
+        class="filter-select">
+        <option value="">Toutes les sources</option>
+        <option value="Puits">Puits</option>
+        <option value="Forage">Forage</option>
+        <option value="Rivière">Rivière</option>
+        <option value="Bassin">Bassin</option>
+        <option value="Pluie">Pluie</option>
+      </select>
+    </div>
+
+    <!-- Filtre par superficie -->
+    <div class="filter-group">
+      <label>Superficie (hectares)</label>
+      <div class="range-inputs">
+        <input
+          type="number"
+          [(ngModel)]="filters.superficieMin"
+          (ngModelChange)="onFilterChange()"
+          placeholder="Min"
+          min="0"
+          step="0.1">
+        <span>à</span>
+        <input
+          type="number"
+          [(ngModel)]="filters.superficieMax"
+          (ngModelChange)="onFilterChange()"
+          placeholder="Max"
+          min="0"
+          step="0.1">
+      </div>
+    </div>
+
+    <!-- Filtre par ville -->
+    <div class="filter-group">
+      <label for="ville">Ville</label>
+      <select
+        id="ville"
+        [(ngModel)]="filters.ville"
+        (ngModelChange)="onFilterChange()"
+        class="filter-select">
+        <option value="">Toutes les villes</option>
+        <option *ngFor="let ville of villes" [value]="ville">
+          {{ ville }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Filtre par statut -->
+    <div class="filter-group">
+      <label>Statut</label>
+      <div class="checkbox-group">
+        <label class="checkbox-label">
+          <input
+            type="checkbox"
+            [(ngModel)]="filters.showActive"
+            (ngModelChange)="onFilterChange()">
+          <span>Actives</span>
+        </label>
+        <label class="checkbox-label">
+          <input
+            type="checkbox"
+            [(ngModel)]="filters.showInactive"
+            (ngModelChange)="onFilterChange()">
+          <span>Inactives</span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="filter-footer">
+    <div class="results-count">
+      <i class="fas fa-check-circle"></i>
+      {{ filteredCount }} parcelle(s) trouvée(s)
+    </div>
+  </div>
+</div>

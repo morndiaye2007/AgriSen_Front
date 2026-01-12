@@ -2,19 +2,17 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { Router } from '@angular/router';
-import {environment} from "../../environments/environment";
-import {Utilisateur} from "../core/models/Utilisateur";
 import {LoginRequest} from "../core/models/loginRequest";
 import {AuthResponse} from "../core/models/AuthResponse";
 import {RegisterRequest} from "../core/models/RegisterRequest";
-// import { Utilisateur, LoginRequest, RegisterRequest, AuthResponse } from './core/models/Utilisateur';
-// import { environment } from '../environments/environment';
+import {Utilisateur} from "../core/models/Utilisateur";
+import {environment} from "../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = `${environment.apiUrl}/auth`;
+  private apiUrl = `${environment.baseUrl}/auth`;
   private currentUserSubject = new BehaviorSubject<Utilisateur | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
@@ -25,6 +23,9 @@ export class AuthService {
     this.loadUserFromStorage();
   }
 
+  /**
+   * Charger l'utilisateur depuis le localStorage au démarrage
+   */
   private loadUserFromStorage(): void {
     const token = localStorage.getItem('token');
     const user = localStorage.getItem('user');
@@ -79,7 +80,7 @@ export class AuthService {
   }
 
   /**
-   * Récupérer l'utilisateur actuel
+   * Récupérer l'utilisateur actuel (valeur synchrone)
    * MÉTHODE UTILISÉE DANS LE DASHBOARD
    */
   getCurrentUser(): Utilisateur | null {
@@ -97,7 +98,7 @@ export class AuthService {
    * Mettre à jour le profil utilisateur
    */
   updateUserProfile(id: number, data: Partial<Utilisateur>): Observable<Utilisateur> {
-    return this.http.put<Utilisateur>(`${environment.apiUrl}/utilisateurs/${id}`, data)
+    return this.http.put<Utilisateur>(`${environment.baseUrl}/utilisateurs/${id}`, data)
       .pipe(
         tap(user => {
           localStorage.setItem('user', JSON.stringify(user));

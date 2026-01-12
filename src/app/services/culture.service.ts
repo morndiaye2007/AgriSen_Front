@@ -8,7 +8,7 @@ import { environment } from '../../environments/environment';
   providedIn: 'root'
 })
 export class CultureService {
-  private apiUrl = `${environment.apiUrl}/cultures`;
+  private apiUrl = `${environment.baseUrl}/cultures`;
 
   constructor(private http: HttpClient) {}
 

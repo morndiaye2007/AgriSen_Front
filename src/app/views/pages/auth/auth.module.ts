@@ -13,7 +13,7 @@ const routes: Routes = [
       {
         path: '',
         redirectTo: 'login',
-        pathMatch: 'full'
+        pathMatch: 'full'  // /connexion redirige vers /connexion/login
       },
       {
         path: 'login',
@@ -24,11 +24,15 @@ const routes: Routes = [
         component: RegisterComponent
       }
     ]
-  },
-]
+  }
+];
 
 @NgModule({
-  declarations: [LoginComponent, RegisterComponent, AuthComponent],
+  declarations: [
+    AuthComponent,
+    LoginComponent,
+    RegisterComponent
+  ],
   imports: [
     CommonModule,
     RouterModule.forChild(routes)

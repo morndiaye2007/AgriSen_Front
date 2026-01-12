@@ -1,1 +1,127 @@
-<p>parcelle-stats works!</p>
+<div class="parcelle-stats-container">
+  <h3><i class="fas fa-chart-bar"></i> Statistiques des Parcelles</h3>
+
+  <div class="stats-grid">
+    <!-- Total Parcelles -->
+    <div class="stat-card">
+      <div class="stat-icon green">
+        <i class="fas fa-map-marked-alt"></i>
+      </div>
+      <div class="stat-content">
+        <h4>Total Parcelles</h4>
+        <div class="stat-value">{{ stats.totalParcelles }}</div>
+        <div class="stat-detail">
+          <span class="active">{{ stats.parcellesActives }} actives</span>
+          <span class="separator">•</span>
+          <span class="inactive">{{ stats.parcellesInactives }} inactives</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Superficie Totale -->
+    <div class="stat-card">
+      <div class="stat-icon blue">
+        <i class="fas fa-ruler-combined"></i>
+      </div>
+      <div class="stat-content">
+        <h4>Superficie Totale</h4>
+        <div class="stat-value">{{ stats.superficieTotale | number:'1.2-2' }} <span class="unit">ha</span></div>
+        <div class="stat-detail">
+          <span>Moyenne: {{ stats.superficieMoyenne | number:'1.2-2' }} ha</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cultures en cours -->
+    <div class="stat-card">
+      <div class="stat-icon orange">
+        <i class="fas fa-seedling"></i>
+      </div>
+      <div class="stat-content">
+        <h4>Cultures en cours</h4>
+        <div class="stat-value">{{ stats.culturesEnCours }}</div>
+        <div class="stat-detail">
+          <span>{{ stats.parcellesAvecCulture }} parcelles cultivées</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Taux d'utilisation -->
+    <div class="stat-card">
+      <div class="stat-icon purple">
+        <i class="fas fa-percentage"></i>
+      </div>
+      <div class="stat-content">
+        <h4>Taux d'utilisation</h4>
+        <div class="stat-value">{{ stats.tauxUtilisation | number:'1.0-0' }}<span class="unit">%</span></div>
+        <div class="progress-bar">
+          <div class="progress-fill" [style.width.%]="stats.tauxUtilisation"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Répartition par type de sol -->
+  <div class="chart-section">
+    <h4><i class="fas fa-chart-pie"></i> Répartition par type de sol</h4>
+    <div class="chart-container">
+      <canvas id="solTypeChart"></canvas>
+    </div>
+    <div class="chart-legend">
+      <div *ngFor="let item of stats.repartitionSol" class="legend-item">
+        <span class="legend-color" [style.background-color]="item.color"></span>
+        <span class="legend-label">{{ item.type }}</span>
+        <span class="legend-value">{{ item.count }} ({{ item.percentage }}%)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Répartition par source d'eau -->
+  <div class="chart-section">
+    <h4><i class="fas fa-tint"></i> Répartition par source d'eau</h4>
+    <div class="source-list">
+      <div *ngFor="let source of stats.repartitionSourceEau" class="source-item">
+        <div class="source-header">
+          <span class="source-name">{{ source.type }}</span>
+          <span class="source-count">{{ source.count }} parcelles</span>
+        </div>
+        <div class="source-bar">
+          <div class="source-fill"
+               [style.width.%]="source.percentage"
+               [style.background-color]="source.color"></div>
+        </div>
+        <div class="source-details">
+          <span>{{ source.superficie | number:'1.2-2' }} ha</span>
+          <span>{{ source.percentage }}%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Parcelles par ville -->
+  <div class="chart-section">
+    <h4><i class="fas fa-map-marker-alt"></i> Répartition par ville</h4>
+    <div class="ville-grid">
+      <div *ngFor="let ville of stats.repartitionVille" class="ville-card">
+        <div class="ville-icon">
+          <i class="fas fa-city"></i>
+        </div>
+        <div class="ville-info">
+          <h5>{{ ville.nom }}</h5>
+          <div class="ville-stats">
+            <span class="parcelles-count">{{ ville.count }} parcelles</span>
+            <span class="superficie-count">{{ ville.superficie | number:'1.2-2' }} ha</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Évolution mensuelle -->
+  <div class="chart-section full-width">
+    <h4><i class="fas fa-chart-line"></i> Évolution de la superficie cultivée</h4>
+    <div class="chart-container">
+      <canvas id="evolutionChart"></canvas>
+    </div>
+  </div>
+</div>

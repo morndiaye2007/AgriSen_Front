@@ -1,201 +1,251 @@
-import { Component, OnInit } from '@angular/core';
-import { ChartConfiguration } from 'chart.js';
-import {ParcelleService} from "../../../services/parcelle.service";
-import {JournalService} from "../../../services/journal.service";
-import {MeteoService} from "../../../services/meteo.service";
-import {NotificationService} from "../../../services/notification.service";
-import {AuthService} from "../../../auth.service";
-import {Parcelle} from "../../../core/models/Parcelle";
-import {JournalEntry} from "../../../core/models/JournalEntry";
-import {Meteo} from "../../../core/models/Meteo";
-
-interface DashboardStats {
-  totalParcelles: number;
-  superficieTotale: number;
-  activitesRecentes: number;
-  revenuProjet: number;
-  rendementTotal: number;
-  santéGlobale: number;
-}
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
+import { Utilisateur } from "../../../core/models/Utilisateur";
+import { Parcelle } from "../../../core/models/Parcelle";
+import { JournalEntry } from "../../../core/models/JournalEntry";
+import { Meteo } from "../../../core/models/Meteo";
+import { TypeActivite } from "../../../core/models/TypeActivite";
+import { DashboardStats } from "../../../core/models/DashboardStats";
+import { ActivityCalendar } from "../../../core/models/ActivityCalendar";
+import { ParcelleService } from "../../../services/parcelle.service";
+import { JournalService } from "../../../services/journal.service";
+import { NotificationService } from "../../../services/notification.service";
+import { MeteoService } from "../../../services/meteo.service";
+import {AppNotification} from "../../../core/models/Notification";
+import {AuthService} from "../../../services/auth.service";
+import { ChartData, ChartOptions } from 'chart.js';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent implements OnInit {
+class DashboardComponent implements OnInit, OnDestroy {
+  user: Utilisateur | null = null;
   stats: DashboardStats = {
     totalParcelles: 0,
-    superficieTotale: 0,
+    surfaceTotale: 0,
     activitesRecentes: 0,
-    revenuProjet: 0,
+    alertesActives: 0,
     rendementTotal: 0,
-    santéGlobale: 92
+    revenuProjet: 0,
+    santeGlobale: 0
   };
+
 
   parcelles: Parcelle[] = [];
   recentActivities: JournalEntry[] = [];
+  notifications: AppNotification[] = [];  // ✅ Utiliser AppNotification au lieu de Notification
   currentMeteo: Meteo | null = null;
   meteoForecast: Meteo[] = [];
-  notifications: Notification[] = [];
+
+  currentMonth: Date = new Date();
+  calendarDays: ActivityCalendar[] = [];
+
+  selectedSeason = '2024';
   loading = true;
-  userName = '';
 
-  // Chart data
-  rendementChartData: ChartConfiguration['data'] = {
-    labels: [],
-    datasets: []
-  };
-
-  rendementChartOptions: ChartConfiguration['options'] = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        display: false
-      }
-    },
-    scales: {
-      y: {
-        beginAtZero: true,
-        ticks: {
-          callback: function(value) {
-            return value + ' T';
-          }
-        }
-      }
-    }
-  };
-
-  // Données de prévisions de vente
-  previsionVenteData: ChartConfiguration['data'] = {
-    labels: [],
-    datasets: []
-  };
+  // Pour les filtres du calendrier
+  activityFilters = [
+    { type: TypeActivite.SEMIS, label: 'Semis', color: '#4CAF50', active: true },
+    { type: TypeActivite.IRRIGATION, label: 'Irrigation', color: '#2196F3', active: true },
+    { type: TypeActivite.RECOLTE, label: 'Récolte', color: '#FF9800', active: true },
+    { type: TypeActivite.TRAITEMENT_PHYTOSANITAIRE, label: 'Traitement', color: '#9C27B0', active: true },
+    { type: TypeActivite.APPLICATION_ENGRAIS, label: 'Engrais', color: '#8BC34A', active: true }
+  ];
 
   constructor(
+    private authService: AuthService,
     private parcelleService: ParcelleService,
     private journalService: JournalService,
-    private meteoService: MeteoService,
     private notificationService: NotificationService,
-    private authService: AuthService
+    private meteoService: MeteoService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.loadUserInfo();
+    this.loadUserData();
     this.loadDashboardData();
   }
 
-  loadUserInfo(): void {
-    const user = this.authService.getCurrentUser();
-    if (user) {
-      this.userName = `${user.prenom} ${user.nom}`;
+  ngOnDestroy(): void {
+    // Cleanup si nécessaire
+  }
+
+  loadUserData(): void {
+    this.user = this.authService.getCurrentUser();
+    if (!this.user) {
+      this.router.navigate(['/login']);
     }
   }
 
   loadDashboardData(): void {
-    const user = this.authService.getCurrentUser();
-    if (!user?.id) return;
+    this.loading = true;
 
     // Charger les parcelles
-    this.parcelleService.getParcellesByAgriculteur(user.id).subscribe({
+    this.parcelleService.getAllParcelles().subscribe({
       next: (parcelles) => {
-        this.parcelles = parcelles;
-        this.stats.totalParcelles = parcelles.length;
-        this.stats.superficieTotale = parcelles.reduce((sum, p) => sum + (p.superficie || 0), 0);
-
-        if (parcelles.length > 0 && parcelles[0].latitude && parcelles[0].longitude) {
-          this.loadMeteo(parcelles[0].latitude, parcelles[0].longitude);
-        }
+        this.parcelles = parcelles.filter(p => p.active);
+        this.stats.totalParcelles = this.parcelles.length;
+        this.stats.surfaceTotale = this.parcelles.reduce((sum, p) => sum + p.superficie, 0);
       },
-      error: (err) => console.error('Error loading parcelles:', err)
+      error: (err) => console.error('Erreur chargement parcelles:', err)
     });
 
     // Charger les activités récentes
     this.journalService.getAllEntries().subscribe({
       next: (entries) => {
-        const thirtyDaysAgo = new Date();
-        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-
         this.recentActivities = entries
-          .filter(e => new Date(e.dateActivite) >= thirtyDaysAgo)
           .sort((a, b) => new Date(b.dateActivite).getTime() - new Date(a.dateActivite).getTime())
-          .slice(0, 5);
+          .slice(0, 10);
 
-        this.stats.activitesRecentes = this.recentActivities.length;
-        this.prepareChartData(entries);
+        this.stats.activitesRecentes = entries.filter(e =>
+          this.isRecent(new Date(e.dateActivite))
+        ).length;
+
+        this.generateCalendar();
       },
-      error: (err) => console.error('Error loading journal entries:', err)
+      error: (err) => console.error('Erreur chargement activités:', err)
     });
 
     // Charger les notifications
-    this.notificationService.getUnreadNotifications(user.id).subscribe({
-      next: (notifications) => {
-        this.notifications = notifications.slice(0, 5);
-        this.loading = false;
-      },
-      error: (err) => {
-        console.error('Error loading notifications:', err);
-        this.loading = false;
-      }
-    });
+    if (this.user?.id) {
+      this.notificationService.getNotificationsByUser(this.user.id).subscribe({
+        next: (notifications) => {
+          this.notifications = notifications
+            .filter(n => !n.lu)
+            .sort((a, b) => new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime())
+            .slice(0, 5);
 
-    // Calculer les statistiques fictives
-    this.stats.revenuProjet = 7500000;
-    this.stats.rendementTotal = 12.5;
+          this.stats.alertesActives = this.notifications.length;
+        },
+        error: (err) => console.error('Erreur chargement notifications:', err)
+      });
+    }
+
+    // Charger la météo
+    if (this.user?.ville || this.parcelles.length > 0) {
+      const latitude = this.parcelles[0]?.latitude || 14.7167;
+      const longitude = this.parcelles[0]?.longitude || -17.4677;
+
+      this.meteoService.getCurrentWeather(latitude, longitude).subscribe({
+        next: (weather) => {
+          this.currentMeteo = weather;
+        },
+        error: (err) => console.error('Erreur chargement météo:', err)
+      });
+
+      this.meteoService.getWeatherForecast(latitude, longitude).subscribe({
+        next: (forecast) => {
+          this.meteoForecast = forecast.slice(0, 5);
+        },
+        error: (err) => console.error('Erreur chargement prévisions:', err)
+      });
+    }
+
+    this.loading = false;
   }
 
-  loadMeteo(latitude: number, longitude: number): void {
-    this.meteoService.getCurrentMeteo(latitude, longitude).subscribe({
-      next: (meteo) => {
-        this.currentMeteo = meteo;
-      },
-      error: (err) => console.error('Error loading meteo:', err)
-    });
-
-    this.meteoService.getForecast(latitude, longitude, 5).subscribe({
-      next: (forecast) => {
-        this.meteoForecast = forecast;
-      },
-      error: (err) => console.error('Error loading forecast:', err)
-    });
+  isRecent(date: Date): boolean {
+    const now = new Date();
+    const daysDiff = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
+    return daysDiff <= 7;
   }
 
-  prepareChartData(entries: JournalEntry[]): void {
-    // Rendement par culture
-    const cultures = ['Mil', 'Arachides', 'Mangues', 'Niébé', 'Sorgho'];
-    const rendements = [2.5, 1.8, 3.2, 1.5, 2.0];
+  generateCalendar(): void {
+    const year = this.currentMonth.getFullYear();
+    const month = this.currentMonth.getMonth();
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
 
-    this.rendementChartData = {
-      labels: cultures,
-      datasets: [{
-        label: 'Rendement (Tonnes)',
-        data: rendements,
-        backgroundColor: [
-          '#4ade80',
-          '#fb923c',
-          '#fbbf24',
-          '#a78bfa',
-          '#60a5fa'
-        ],
-        borderRadius: 8
-      }]
+    this.calendarDays = [];
+
+    for (let day = 1; day <= lastDay.getDate(); day++) {
+      const date = new Date(year, month, day);
+      const activities = this.recentActivities.filter(activity => {
+        const actDate = new Date(activity.dateActivite);
+        return actDate.getDate() === day &&
+          actDate.getMonth() === month &&
+          actDate.getFullYear() === year &&
+          this.isActivityVisible(activity.typeActivite);
+      });
+
+      this.calendarDays.push({ date, activities });
+    }
+  }
+
+  isActivityVisible(type: TypeActivite): boolean {
+    const filter = this.activityFilters.find(f => f.type === type);
+    return filter ? filter.active : false;
+  }
+
+  toggleFilter(filter: any): void {
+    filter.active = !filter.active;
+    this.generateCalendar();
+  }
+
+  changeMonth(delta: number): void {
+    this.currentMonth = new Date(
+      this.currentMonth.getFullYear(),
+      this.currentMonth.getMonth() + delta
+    );
+    this.generateCalendar();
+  }
+
+  onSeasonChange(): void {
+    // Recharger les données pour la saison sélectionnée
+    this.loadDashboardData();
+  }
+
+  changeSeason(direction: 'previous' | 'next'): void {
+    // Logique pour changer de saison
+    console.log('Change season:', direction);
+  }
+
+  viewAllAlerts(): void {
+    this.router.navigate(['/notifications']);
+  }
+
+  getActivityIcon(type: TypeActivite): string {
+    const icons: { [key in TypeActivite]: string } = {
+      [TypeActivite.PREPARATION_SOL]: 'fas fa-tractor',
+      [TypeActivite.SEMIS]: 'fas fa-seedling',
+      [TypeActivite.IRRIGATION]: 'fas fa-tint',
+      [TypeActivite.APPLICATION_ENGRAIS]: 'fas fa-flask',
+      [TypeActivite.TRAITEMENT_PHYTOSANITAIRE]: 'fas fa-spray-can',
+      [TypeActivite.DESHERBAGE]: 'fas fa-broom',
+      [TypeActivite.RECOLTE]: 'fas fa-warehouse',
+      [TypeActivite.AUTRE]: 'fas fa-ellipsis-h'
     };
-
-    // Prévisions de vente
-    const months = ['Juin', 'Juillet', 'Août', 'Sept', 'Oct', 'Nov'];
-    this.previsionVenteData = {
-      labels: months,
-      datasets: [{
-        label: 'Ventes',
-        data: [650, 590, 800, 810, 860, 900],
-        fill: true,
-        borderColor: '#667eea',
-        backgroundColor: 'rgba(102, 126, 234, 0.1)',
-        tension: 0.4
-      }]
-    };
+    return icons[type] || 'fas fa-circle';
   }
+
+  getActivityColor(type: TypeActivite): string {
+    const filter = this.activityFilters.find(f => f.type === type);
+    return filter?.color || '#9E9E9E';
+  }
+
+  getWeatherIcon(condition?: string): string {
+    if (!condition) return 'fas fa-cloud';
+
+    const conditionLower = condition.toLowerCase();
+    if (conditionLower.includes('soleil') || conditionLower.includes('clair')) {
+      return 'fas fa-sun';
+    } else if (conditionLower.includes('nuage')) {
+      return 'fas fa-cloud';
+    } else if (conditionLower.includes('pluie')) {
+      return 'fas fa-cloud-rain';
+    } else if (conditionLower.includes('orage')) {
+      return 'fas fa-bolt';
+    }
+    return 'fas fa-cloud';
+  }
+
+  get currentSeason(): string {
+    return `Saison ${this.selectedSeason}`;
+  }
+
+  userName: string = '';
 
   getGreeting(): string {
     const hour = new Date().getHours();
@@ -204,24 +254,34 @@ export class DashboardComponent implements OnInit {
     return 'Bonsoir';
   }
 
-  markNotificationAsRead(notification: Notification): void {
-    if (notification.id) {
-      this.notificationService.markAsRead(notification.id).subscribe({
-        next: () => {
-          notification.lu = true;
-        },
-        error: (err) => console.error('Error marking notification as read:', err)
-      });
-    }
-  }
 
-  getActivityIcon(type: string): string {
-    const icons: any = {
-      'SEMIS': 'fa-seedling',
-      'IRRIGATION': 'fa-tint',
-      'RECOLTE': 'fa-wheat',
-      'TRAITEMENT': 'fa-spray-can'
-    };
-    return icons[type] || 'fa-leaf';
-  }
+
+
+rendementChartData: ChartData<'bar'> = {
+  labels: ['Mil', 'Riz', 'Maïs'],
+  datasets: [
+    {
+      label: 'Rendement (T)',
+      data: [12, 18, 9]
+    }
+  ]
+};
+
+rendementChartOptions: ChartOptions = {
+  responsive: true,
+  maintainAspectRatio: false
+};
+
+previsionVenteData: ChartData<'line'> = {
+  labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin'],
+  datasets: [
+    {
+      label: 'Ventes prévues',
+      data: [200000, 250000, 300000, 320000, 350000, 400000]
+    }
+  ]
+};
+
 }
+
+export default DashboardComponent

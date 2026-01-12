@@ -16,10 +16,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FeatherIconModule } from './core/feather-icon/feather-icon.module';
-import { MatDialogModule } from '@angular/material/dialog';
-import { ChoixPaysComponent } from './views/pages/pays/choix-pays/choix-pays.component';
-import { AddAgentComponent } from './views/pages/agent/add-agent/add-agent.component';
-import { DashboardComponent } from './views/pages/dashboard/dashboard.component';
 import { JournalComponent } from './views/pages/journal/journal.component';
 import { ParcellesComponent } from './views/pages/parcelles/parcelles.component';
 import { NotFoundComponent } from './views/pages/error/not-found/not-found.component';
@@ -31,7 +27,7 @@ import { ServerErrorComponent } from './views/pages/error/server-error/server-er
   declarations: [
     AppComponent,
     ErrorPageComponent,
-    DashboardComponent,
+    // DashboardComponent,
     JournalComponent,
     ParcellesComponent,
     NotFoundComponent,

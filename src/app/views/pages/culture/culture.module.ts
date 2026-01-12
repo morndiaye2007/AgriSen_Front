@@ -8,6 +8,7 @@ import { EditCultureComponent } from './edit-culture/edit-culture.component';
 import { DetailCultureComponent } from './detail-culture/detail-culture.component';
 import { CultureCardComponent } from './culture-card/culture-card.component';
 import { CultureCalendarComponent } from './culture-calendar/culture-calendar.component';
+import {ReactiveFormsModule} from "@angular/forms";
 
 
 @NgModule({
@@ -19,9 +20,10 @@ import { CultureCalendarComponent } from './culture-calendar/culture-calendar.co
     CultureCardComponent,
     CultureCalendarComponent
   ],
-  imports: [
-    CommonModule,
-    CultureRoutingModule
-  ]
+    imports: [
+        CommonModule,
+        CultureRoutingModule,
+        ReactiveFormsModule
+    ]
 })
 export class CultureModule { }
